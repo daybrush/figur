@@ -130,24 +130,28 @@ function poly(_a, container) {
     container = makeSVGDOM();
   }
 
-  var _b = _a.x,
-      x = _b === void 0 ? 0 : _b,
-      _c = _a.y,
-      y = _c === void 0 ? 0 : _c,
+  var _b = _a.left,
+      left = _b === void 0 ? 0 : _b,
+      _c = _a.top,
+      top = _c === void 0 ? 0 : _c,
+      _d = _a.right,
+      right = _d === void 0 ? 0 : _d,
+      _e = _a.bottom,
+      bottom = _e === void 0 ? 0 : _e,
       strokeWidth = _a.strokeWidth,
-      _d = _a.strokeLinejoin,
-      strokeLinejoin = _d === void 0 ? "round" : _d,
-      _e = _a.fill,
-      fill = _e === void 0 ? "transparent" : _e,
+      _f = _a.strokeLinejoin,
+      strokeLinejoin = _f === void 0 ? "round" : _f,
+      _g = _a.fill,
+      fill = _g === void 0 ? "transparent" : _g,
       side = _a.side,
       width = _a.width,
       height = _a.height,
       rotate = _a.rotate,
-      _f = _a.innerRadius,
-      innerRadius = _f === void 0 ? 100 : _f,
-      attributes = __rest(_a, ["x", "y", "strokeWidth", "strokeLinejoin", "fill", "side", "width", "height", "rotate", "innerRadius"]);
+      _h = _a.innerRadius,
+      innerRadius = _h === void 0 ? 100 : _h,
+      attributes = __rest(_a, ["left", "top", "right", "bottom", "strokeWidth", "strokeLinejoin", "fill", "side", "width", "height", "rotate", "innerRadius"]);
 
-  var _g = getRect({
+  var _j = getRect({
     side: side,
     rotate: rotate,
     width: width,
@@ -156,21 +160,21 @@ function poly(_a, container) {
     strokeLinejoin: strokeLinejoin,
     strokeWidth: strokeWidth
   }),
-      points = _g.points,
-      polygonWidth = _g.width,
-      polygonHeight = _g.height;
+      points = _j.points,
+      polygonWidth = _j.width,
+      polygonHeight = _j.height;
 
   var polygon = makeDOM("polygon");
 
   if (container.getAttribute("class") === CLASS_NAME) {
-    container.setAttribute("viewBox", "0 0 " + (x + polygonWidth) + " " + (y + polygonHeight));
+    container.setAttribute("viewBox", "0 0 " + (left + polygonWidth + right) + " " + (top + polygonHeight + bottom));
   }
 
   polygon.setAttribute("fill", fill);
   polygon.setAttribute("stroke-linejoin", strokeLinejoin);
   polygon.setAttribute("stroke-width", "" + strokeWidth);
   polygon.setAttribute("points", points.map(function (point) {
-    return x + point[0] + "," + (y + point[1]);
+    return left + point[0] + "," + (top + point[1]);
   }).join(" "));
 
   for (var name in attributes) {

@@ -10,7 +10,9 @@
 
 svg {
   width: 100px;
-  margin: 5px 5px;
+  margin: 5px 2px;
+  border: 1px solid #ccc;
+  vertical-align: bottom;
 }
 </style>
 <a href="https://github.com/daybrush/shape-svg" target="_blank">https://github.com/daybrush/shape-svg</a>
@@ -19,31 +21,12 @@ svg {
 <div id="star"></div>
 
 <script>
-  poly.appendChild(Shape.poly({strokeWidth: 10, stroke: "#5ff", width: 100}));
-  poly.appendChild(Shape.poly({side: 4, strokeWidth: 10, stroke: "#333", width: 100}));
-  poly.appendChild(Shape.poly({side: 5, strokeWidth: 10, stroke: "#f55", width: 100}));
-  poly.appendChild(Shape.poly({side: 6, strokeWidth: 10, stroke: "#333", width: 100}));
-  poly.appendChild(Shape.poly({side: 7, strokeWidth: 10, stroke: "#55f", width: 100}));
-  poly.appendChild(Shape.poly({side: 8, strokeWidth: 10, stroke: "#333", width: 100}));
-  poly.appendChild(Shape.poly({side: 9, strokeWidth: 10, stroke: "#5f5", width: 100}));
-  poly.appendChild(Shape.poly({side: 10, strokeWidth: 10, stroke: "#333", width: 100}));
-
-  polyv.appendChild(Shape.poly({strokeWidth: 5, stroke: "#5ff", height: 100}));
-  polyv.appendChild(Shape.poly({side: 4, strokeWidth: 5, stroke: "#333", height: 100}));
-  polyv.appendChild(Shape.poly({side: 5, strokeWidth: 5, stroke: "#f55", height: 100}));
-  polyv.appendChild(Shape.poly({side: 6, strokeWidth: 5, stroke: "#333", height: 100}));
-  polyv.appendChild(Shape.poly({side: 7, strokeWidth: 5, stroke: "#55f", height: 100}));
-  polyv.appendChild(Shape.poly({side: 8, strokeWidth: 5, stroke: "#333", height: 100}));
-  polyv.appendChild(Shape.poly({side: 9, strokeWidth: 5, stroke: "#5f5", height: 100}));
-  polyv.appendChild(Shape.poly({side: 10, strokeWidth: 5, stroke: "#333", height: 100}));
-
-  star.appendChild(Shape.star({strokeWidth: 10, stroke: "#5ff", width: 100}));
-  star.appendChild(Shape.star({side: 4, strokeWidth: 10, stroke: "#333", width: 100}));
-  star.appendChild(Shape.star({side: 5, strokeWidth: 10, stroke: "#f55", width: 100}));
-  star.appendChild(Shape.star({side: 6, strokeWidth: 10, stroke: "#333", width: 100, strokeLinejoin: "bavel"}));
-  star.appendChild(Shape.star({side: 7, strokeWidth: 10, stroke: "#55f", width: 100}));
-  star.appendChild(Shape.star({side: 8, strokeWidth: 10, stroke: "#333", width: 100}));
-  star.appendChild(Shape.star({side: 9, strokeWidth: 10, stroke: "#5f5", width: 100}));
-  star.appendChild(Shape.star({side: 10, strokeWidth: 10, stroke: "#333", width: 100}));
+  var colors = ["#f55", "#277EC9", "#80449D", "#D6631C", "#B8EDA0", "#B7EFF1", "#333"];
+  var linejoins = ["bavel", "round", "miter", "miter-clip"]
+  for (var side = 3; side <= 10; ++side) {
+    poly.appendChild(Shape.poly({side: side, strokeWidth: 7, stroke: colors[side % 7], width: 100}));
+    polyv.appendChild(Shape.poly({side: side, strokeWidth: 5, stroke: colors[side % 7], height: 100}));
+    star.appendChild(Shape.star({side: side, strokeWidth: 10, stroke: colors[side % 7], width: 100, strokeLinejoin: linejoins[side % 4]}));
+  }
 
 </script>

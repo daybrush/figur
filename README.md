@@ -4,7 +4,7 @@
 
 Make CSS Polygon Shape
 
-* [Polygons & Stars Demo](https://codepen.io/daybrush/pen/qJoagW)
+* [Polygons & Stars Demo](https://codepen.io/daybrush/pen/ReYxLy)
 
 ```sh
 $ npm install shape-svg

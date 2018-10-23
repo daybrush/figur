@@ -28,8 +28,8 @@ export function getRect({
   side = 3,
   rotate = 0,
   innerRadius = 100,
-  width = 0,
   height = 0,
+  width = height ? 0 : 100,
   strokeLinejoin = "round",
   strokeWidth = 0,
 }: SVGInterface) {

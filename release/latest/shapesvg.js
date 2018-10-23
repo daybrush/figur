@@ -122,16 +122,20 @@ repository: https://github.com/daybrush/shape-svg
         height: polygonHeight
       };
     }
-    function star(_a) {
+    function star(_a, container) {
       var _b = _a.side,
           side = _b === void 0 ? 3 : _b,
           _c = _a.innerRadius,
           innerRadius = _c === void 0 ? 60 * Math.cos(Math.PI / side) : _c;
       return poly(__assign({}, arguments[0], {
         innerRadius: innerRadius
-      }));
+      }), container);
     }
-    function poly(_a) {
+    function poly(_a, container) {
+      if (container === void 0) {
+        container = makeSVGDOM();
+      }
+
       var _b = _a.x,
           x = _b === void 0 ? 0 : _b,
           _c = _a.y,
@@ -145,11 +149,9 @@ repository: https://github.com/daybrush/shape-svg
           rotate = _a.rotate,
           _e = _a.innerRadius,
           innerRadius = _e === void 0 ? 100 : _e,
-          _f = _a.container,
-          container = _f === void 0 ? makeSVGDOM() : _f,
-          attributes = __rest(_a, ["x", "y", "strokeWidth", "strokeLinejoin", "side", "width", "height", "rotate", "innerRadius", "container"]);
+          attributes = __rest(_a, ["x", "y", "strokeWidth", "strokeLinejoin", "side", "width", "height", "rotate", "innerRadius"]);
 
-      var _g = getRect({
+      var _f = getRect({
         side: side,
         rotate: rotate,
         width: width,
@@ -158,9 +160,9 @@ repository: https://github.com/daybrush/shape-svg
         strokeLinejoin: strokeLinejoin,
         strokeWidth: strokeWidth
       }),
-          points = _g.points,
-          polygonWidth = _g.width,
-          polygonHeight = _g.height;
+          points = _f.points,
+          polygonWidth = _f.width,
+          polygonHeight = _f.height;
 
       var polygon = makeDOM("polygon");
 

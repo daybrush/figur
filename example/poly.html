@@ -1,10 +1,10 @@
-<script src="../release/latest/shapepoly.min.js"></script>
+<script src="../release/latest/shapesvg.min.js"></script>
 <style>
 body {
   padding: 10px;
   text-align: center;
 }
-.__shape-poly, .star {
+.__shape-svg, .star {
   display: inline-block;
   position: relative;
   width: 80px;
@@ -23,20 +23,14 @@ body {
 <div id="poly"></div>
 
 <script>
-  const poly1 = ShapePoly.poly({strokeWidth: "10px", stroke: "#F55", split: 5, direction: "bottom"});
-  const poly2 = ShapePoly.poly({strokeWidth: "10px", stroke: "#5e5", split: 3, side: 4, direction: "bottom"});
-  const poly3 = ShapePoly.poly({strokeWidth: "10px", stroke: "#55e", split: 4, side: 5, direction: "bottom"});
-  const poly4 = ShapePoly.poly({strokeWidth: "10px", stroke: "#5ee", starRadius: 40, split: 4, side: 5, direction: "bottom"});
+  const poly1 = Shape.poly({strokeWidth: 10, stroke: "#F55", width: 100, fill: "transparent"});
+  const poly2 = Shape.poly({strokeWidth: 10, stroke: "#5e5", width: 100, fill: "transparent", side: 4});
+  const poly3 = Shape.poly({strokeWidth: 10, stroke: "#55e", width: 100, fill: "transparent", side: 5,});
+  const poly4 = Shape.star({strokeWidth: 10, stroke: "#5ee", width: 100, fill: "transparent", innerRadius: 40, side: 5});
 
   poly.appendChild(poly1);
   poly.appendChild(poly2);
   poly.appendChild(poly3);
   poly.appendChild(poly4);
 
-  setTimeout(function () {
-    ShapePoly.be(poly1, {side: 5, direction: "bottom"});
-    ShapePoly.be(poly2, {side: 6, direction: "bottom"});
-    ShapePoly.be(poly3, {side: 10, direction: "bottom"});
-    ShapePoly.be(poly4, {side: 5, direction: "bottom"});
-  }, 1000);
 </script>

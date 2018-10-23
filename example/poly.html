@@ -1,0 +1,42 @@
+<script src="../release/latest/shapepoly.min.js"></script>
+<style>
+body {
+  padding: 10px;
+  text-align: center;
+}
+.__shape-poly, .star {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  /* border: 1px solid black; */
+  opacity: 0.7;
+  vertical-align: top;
+  margin: 10px;
+}
+#poly .__shape-poly-side {
+  transition: transform ease 1s;
+}
+#poly .__shape-poly-side0, #poly .__shape-poly-side-percent {
+  transition: all ease 1s;
+}
+</style>
+<div id="poly"></div>
+
+<script>
+  const poly1 = ShapePoly.poly({strokeWidth: "10px", stroke: "#F55", split: 5, direction: "bottom"});
+  const poly2 = ShapePoly.poly({strokeWidth: "10px", stroke: "#5e5", split: 3, side: 4, direction: "bottom"});
+  const poly3 = ShapePoly.poly({strokeWidth: "10px", stroke: "#55e", split: 4, side: 5, direction: "bottom"});
+  const poly4 = ShapePoly.poly({strokeWidth: "10px", stroke: "#5ee", starRadius: 40, split: 4, side: 5, direction: "bottom"});
+
+  poly.appendChild(poly1);
+  poly.appendChild(poly2);
+  poly.appendChild(poly3);
+  poly.appendChild(poly4);
+
+  setTimeout(function () {
+    ShapePoly.be(poly1, {side: 5, direction: "bottom"});
+    ShapePoly.be(poly2, {side: 6, direction: "bottom"});
+    ShapePoly.be(poly3, {side: 10, direction: "bottom"});
+    ShapePoly.be(poly4, {side: 5, direction: "bottom"});
+  }, 1000);
+</script>

@@ -103,9 +103,11 @@ repository: https://github.com/daybrush/shape-svg
       var isWidth = !!width;
       var scale = isWidth ? width / (maxX - minX) : height / (maxY - minY);
       var isOuter = strokeLinejoin === "miter" || strokeLinejoin === "arcs" || strokeLinejoin === "miter-clip";
+      var sideSin = Math.sin(Math.PI / side);
       var innerCos = Math.min(sideCos, innerRadius / 100);
       var innerScale = scale * innerCos;
-      var outerScale = isOuter ? (innerScale + strokeWidth / 2 / (1 - innerCos * innerCos)) / innerScale : 1;
+      var diagonal = strokeWidth / 2 / (sideCos === innerCos ? 1 : Math.sin(Math.atan(sideSin / (sideCos - innerCos))));
+      var outerScale = isOuter ? (innerScale + diagonal) / innerScale : 1;
       var pos = isOuter ? 0 : strokeWidth / 2;
       xPoints = xPoints.map(function (xp) {
         return (xp - minX * outerScale) * scale + pos;

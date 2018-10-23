@@ -19,14 +19,15 @@ svg {
 <div id="poly"></div>
 <div id="polyv"></div>
 <div id="star"></div>
+<div id="star2"></div>
 
 <script>
   var colors = ["#f55", "#277EC9", "#80449D", "#D6631C", "#B8EDA0", "#B7EFF1", "#333"];
-  var linejoins = ["bavel", "round", "miter", "miter-clip"]
+  var linejoins = ["bevel", "arcs", "round", "miter", "miter-clip"]
   for (var side = 3; side <= 10; ++side) {
     poly.appendChild(Shape.poly({side: side, strokeWidth: 7, stroke: colors[side % 7], width: 100}));
     polyv.appendChild(Shape.poly({side: side, strokeWidth: 5, stroke: colors[side % 7], height: 100}));
-    star.appendChild(Shape.star({side: side, strokeWidth: 10, stroke: colors[side % 7], width: 100, strokeLinejoin: linejoins[side % 4]}));
+    star.appendChild(Shape.star({side: side, strokeWidth: 10, stroke: colors[side % 7], width: 100, strokeLinejoin: linejoins[side % 5]}));
   }
 
 </script>

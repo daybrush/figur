@@ -101,7 +101,9 @@ function getRect(_a) {
   var isWidth = !!width;
   var scale = isWidth ? width / (maxX - minX) : height / (maxY - minY);
   var isOuter = strokeLinejoin === "miter" || strokeLinejoin === "arcs" || strokeLinejoin === "miter-clip";
-  var outerScale = isOuter ? (scale + strokeWidth / 2) / scale : 1;
+  var innerScale = scale * Math.min(sideCos, innerRadius / 100); // strokeLinejoin === "bevel" ? (scale * Math.min(sideCos, innerRadius / 100) + strokeWidth / 2 ) / scale;
+
+  var outerScale = isOuter ? (innerScale + strokeWidth / 2) / innerScale : 1;
   var pos = isOuter ? 0 : strokeWidth / 2;
   xPoints = xPoints.map(function (xp) {
     return (xp - minX * outerScale) * scale + pos;

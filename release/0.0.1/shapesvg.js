@@ -143,15 +143,17 @@ repository: https://github.com/daybrush/shape-svg
           strokeWidth = _a.strokeWidth,
           _d = _a.strokeLinejoin,
           strokeLinejoin = _d === void 0 ? "round" : _d,
+          _e = _a.fill,
+          fill = _e === void 0 ? "transparent" : _e,
           side = _a.side,
           width = _a.width,
           height = _a.height,
           rotate = _a.rotate,
-          _e = _a.innerRadius,
-          innerRadius = _e === void 0 ? 100 : _e,
-          attributes = __rest(_a, ["x", "y", "strokeWidth", "strokeLinejoin", "side", "width", "height", "rotate", "innerRadius"]);
+          _f = _a.innerRadius,
+          innerRadius = _f === void 0 ? 100 : _f,
+          attributes = __rest(_a, ["x", "y", "strokeWidth", "strokeLinejoin", "fill", "side", "width", "height", "rotate", "innerRadius"]);
 
-      var _f = getRect({
+      var _g = getRect({
         side: side,
         rotate: rotate,
         width: width,
@@ -160,9 +162,9 @@ repository: https://github.com/daybrush/shape-svg
         strokeLinejoin: strokeLinejoin,
         strokeWidth: strokeWidth
       }),
-          points = _f.points,
-          polygonWidth = _f.width,
-          polygonHeight = _f.height;
+          points = _g.points,
+          polygonWidth = _g.width,
+          polygonHeight = _g.height;
 
       var polygon = makeDOM("polygon");
 
@@ -170,6 +172,7 @@ repository: https://github.com/daybrush/shape-svg
         container.setAttribute("viewBox", "0 0 " + (x + polygonWidth) + " " + (y + polygonHeight));
       }
 
+      polygon.setAttribute("fill", fill);
       polygon.setAttribute("stroke-linejoin", strokeLinejoin);
       polygon.setAttribute("stroke-width", "" + strokeWidth);
       polygon.setAttribute("points", points.map(function (point) {

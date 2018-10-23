@@ -28,6 +28,7 @@ svg {
     poly.appendChild(Shape.poly({side: side, strokeWidth: 7, stroke: colors[side % 7], width: 100}));
     polyv.appendChild(Shape.poly({side: side, strokeWidth: 5, stroke: colors[side % 7], height: 100}));
     star.appendChild(Shape.star({side: side, strokeWidth: 10, stroke: colors[side % 7], width: 100, strokeLinejoin: linejoins[side % 5]}));
+    star2.appendChild(Shape.star({side: side, top: 10, left: 10, right: 10, bottom: 10, strokeWidth: 10, stroke: colors[side % 7], width: 100, strokeLinejoin: linejoins[side % 5]}));
   }
 
 </script>

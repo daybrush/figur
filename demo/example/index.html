@@ -14,21 +14,29 @@ svg {
   border: 1px solid #ccc;
   vertical-align: bottom;
 }
+svg path {
+  transition: all ease 0.5s;
+}
 </style>
 <a href="https://github.com/daybrush/shape-svg" target="_blank">https://github.com/daybrush/shape-svg</a>
 <div id="poly"></div>
-<div id="polyv"></div>
 <div id="star"></div>
 <div id="star2"></div>
-
+<div id="poly2"></div>
 <script>
   var colors = ["#f55", "#277EC9", "#80449D", "#D6631C", "#B8EDA0", "#B7EFF1", "#333"];
   var linejoins = ["bevel", "arcs", "round", "miter", "miter-clip"]
   for (var side = 3; side <= 10; ++side) {
     poly.appendChild(Shape.poly({side: side, strokeWidth: 7, stroke: colors[side % 7], width: 100}));
-    polyv.appendChild(Shape.poly({side: side, strokeWidth: 5, stroke: colors[side % 7], height: 100}));
     star.appendChild(Shape.star({side: side, strokeWidth: 10, stroke: colors[side % 7], width: 100, strokeLinejoin: linejoins[side % 5]}));
-    star2.appendChild(Shape.star({side: side, top: 10, left: 10, right: 10, bottom: 10, strokeWidth: 10, stroke: colors[side % 7], width: 100, strokeLinejoin: linejoins[side % 5]}));
+    poly2.appendChild(Shape.star({side: side, css: true, split: side % 2 ? 2 : 1, innerRadius: side % 2 ? 100 : undefined, strokeWidth: 5, stroke: colors[side % 7], height: 100}));
   }
+
+  setTimeout(function () {
+    var polygons = poly2.querySelectorAll("path");
+    for (var side = 3; side <= 10; ++side) {
+      Shape.be(polygons[side - 3], {side: side, css: true, split: side % 2 ? 1 : 2, innerRadius: side % 2 ? 30 : 100, strokeWidth: 5, stroke: colors[side % 7], height: 100})
+    }
+  }, 1000);
 
 </script>

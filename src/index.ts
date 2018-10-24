@@ -12,6 +12,7 @@ interface SVGInterface {
   strokeWidth?: number;
   strokeLinejoin?: STROKE_LINEJOIN;
   innerRadius?: number;
+  css?: boolean;
   [key: string]: any;
 }
 
@@ -24,11 +25,27 @@ function makeSVGDOM() {
   el.setAttribute("class", CLASS_NAME);
   return el;
 }
+function setAttributes(element: SVGElement, attributes: {[key: string]: any}) {
+  for (const name in attributes) {
+    element.setAttribute(name, attributes[name]);
+  }
+}
+function setStyles(element: SVGElement, styles: {[key: string]: any}) {
+  const cssText = [];
+
+  for (const name in styles) {
+    cssText.push(`${name}:${styles[name]};`);
+  }
+  element.style.cssText += cssText.join("");
+}
 export function getRect({
+  left = 0,
+  top = 0,
   side = 3,
   rotate = 0,
   innerRadius = 100,
   height = 0,
+  split = 1,
   width = height ? 0 : 100,
   strokeLinejoin = "round",
   strokeWidth = 0,
@@ -72,10 +89,67 @@ export function getRect({
   xPoints = xPoints.map(xp => (xp - minX * outerScale) * scale + pos);
   yPoints = yPoints.map(yp => (yp - minY * outerScale) * scale + pos);
 
-  const polygonWidth = (maxX - minX) * outerScale * scale + pos * 2;
-  const polygonHeight = (maxY - minY) * outerScale * scale + pos * 2;
-  const points = xPoints.map((xp, i) => [xp, yPoints[i]]);
-  return {points, width: polygonWidth, height: polygonHeight};
+  const pathWidth = (maxX - minX) * outerScale * scale + pos * 2;
+  const pathHeight = (maxY - minY) * outerScale * scale + pos * 2;
+  const length = xPoints.length;
+  const points = [];
+
+  points.push([left + xPoints[0], top + yPoints[0]]);
+  for (let i = 1; i <= length; ++i) {
+    const x1 = xPoints[i - 1];
+    const y1 = yPoints[i - 1];
+    const x2 = xPoints[i === length ? 0 : i];
+    const y2 = yPoints[i === length ? 0 : i];
+
+    for (let j = 1; j <= split; ++j) {
+      const x = (x1 * (split - j) + x2 * j) / split;
+      const y = (y1 * (split - j) + y2 * j) / split;
+
+      points.push([left + x, top + y]);
+    }
+  }
+
+  return {points, width: pathWidth, height: pathHeight};
+}
+export function getPath(points: number[][]) {
+  return points.map((point, i) => {
+      return `${i === 0 ? "M" : "L"} ${point.join(" ")}`;
+  }).join(" ") + " Z";
+}
+export function be(path: SVGPathElement, {
+  left = 0,
+  top = 0,
+  right = 0,
+  bottom = 0,
+  side,
+  split,
+  rotate,
+  innerRadius,
+  height,
+  width,
+  fill = "transparent",
+  strokeLinejoin = "round",
+  strokeWidth = 0,
+  css = false,
+  ...attributes
+}: SVGInterface,   container?: SVGElement) {
+  const {points, width: pathWidth, height: pathHeight } =
+    getRect({left, top, split, side, rotate, width, height, innerRadius, strokeLinejoin, strokeWidth});
+
+  if (container && container.getAttribute("class") === CLASS_NAME) {
+    container.setAttribute("viewBox", `0 0 ${left + pathWidth + right} ${top + pathHeight + bottom}`);
+  }
+  let d = getPath(points);
+
+  css && (d = `path('${d}')`);
+
+  (css ? setStyles : setAttributes)(path, {
+    fill,
+    d,
+    "stroke-linejoin": strokeLinejoin,
+    "stroke-width": `${strokeWidth}`,
+    ...attributes,
+  });
 }
 export function star({
   side = 3,
@@ -83,38 +157,11 @@ export function star({
 }: SVGInterface,     container?: SVGAElement) {
   return poly({...arguments[0], innerRadius}, container);
 }
-export function poly({
-  left = 0,
-  top = 0,
-  right = 0,
-  bottom = 0,
-  strokeWidth,
-  strokeLinejoin = "round",
-  fill = "transparent",
-  side,
-  width,
-  height,
-  rotate,
-  innerRadius = 100,
-  ...attributes
-}: SVGInterface,     container: SVGElement = makeSVGDOM()) {
-  const {points, width: polygonWidth, height: polygonHeight } =
-    getRect({side, rotate, width, height, innerRadius, strokeLinejoin, strokeWidth});
+export function poly(options: SVGInterface, container: SVGElement = makeSVGDOM()) {
+  const path: SVGPathElement = makeDOM("path") as SVGPathElement;
 
-  const polygon: SVGPolygonElement = makeDOM("polygon") as SVGPolygonElement;
-
-  if (container.getAttribute("class") === CLASS_NAME) {
-    container.setAttribute("viewBox", `0 0 ${left + polygonWidth + right} ${top + polygonHeight + bottom}`);
-  }
-  polygon.setAttribute("fill", fill);
-  polygon.setAttribute("stroke-linejoin", strokeLinejoin);
-  polygon.setAttribute("stroke-width", `${strokeWidth}`);
-  polygon.setAttribute("points", points.map(point => `${left + point[0]},${top + point[1]}`).join(" "));
-
-  for (const name in attributes) {
-    polygon.setAttribute(name, attributes[name]);
-  }
-  container.appendChild(polygon);
+  be(path, options, container);
+  container.appendChild(path);
   return container;
 }
 export const VERSION = "#__VERSION__#";

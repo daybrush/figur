@@ -139,13 +139,12 @@ export function be(path: SVGPathElement, {
   if (container && container.getAttribute("class") === CLASS_NAME) {
     container.setAttribute("viewBox", `0 0 ${left + pathWidth + right} ${top + pathHeight + bottom}`);
   }
-  let d = getPath(points);
+  const d = getPath(points);
 
-  css && (d = `path('${d}')`);
+  css ? setStyles(path, {d : `path('${d}')`}) : setAttributes(path, {d});
 
-  (css ? setStyles : setAttributes)(path, {
+  setAttributes(path, {
     fill,
-    d,
     "stroke-linejoin": strokeLinejoin,
     "stroke-width": `${strokeWidth}`,
     ...attributes,

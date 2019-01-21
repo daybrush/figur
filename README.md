@@ -29,6 +29,7 @@ interface SVGInterface {
   strokeLinejoin?: STROKE_LINEJOIN;
   innerRadius?: number;
   css?: boolean;
+  className?: string;
   [key: string]: any;
 }
 

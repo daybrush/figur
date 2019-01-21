@@ -1,6 +1,7 @@
 import typescript from 'rollup-plugin-typescript';
 import PrototypeMinify from "rollup-plugin-prototype-minify";
 import replace from "rollup-plugin-replace";
+import resolve from "rollup-plugin-node-resolve";
 import { uglify } from "rollup-plugin-uglify";
 
 const pkg = require("./package.json");
@@ -21,7 +22,7 @@ const uglifyCode = uglify({
       var type = comment.type;
       if (type === "comment2") {
         // multiline comment
-        return /@version/.test(text);
+        return /name:\sshape-svg/.test(text);
       }
     },
   },
@@ -60,6 +61,7 @@ export default [
     },
   }, {
     input: 'src/index.umd.ts',
+    plugins: [resolve()],
     output: {
       format: "umd",
       name: "Shape",
@@ -68,7 +70,7 @@ export default [
     },
   }, {
     input: 'src/index.umd.ts',
-    plugins: [uglifyCode],
+    plugins: [resolve(), uglifyCode],
     output: {
       format: "umd",
       name: "Shape",

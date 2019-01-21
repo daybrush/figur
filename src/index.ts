@@ -1,4 +1,5 @@
 import { CLASS_NAME, STROKE_LINEJOIN } from "./consts";
+import {hasClass, addClass} from "@daybrush/utils";
 
 interface SVGInterface {
   left?: number;
@@ -13,6 +14,7 @@ interface SVGInterface {
   strokeLinejoin?: STROKE_LINEJOIN;
   innerRadius?: number;
   css?: boolean;
+  className?: string;
   [key: string]: any;
 }
 
@@ -22,7 +24,7 @@ function makeDOM(tag: string) {
 function makeSVGDOM() {
   const el = makeDOM("svg");
 
-  el.setAttribute("class", CLASS_NAME);
+  addClass(el, CLASS_NAME);
   return el;
 }
 function setAttributes(element: SVGElement, attributes: {[key: string]: any}) {
@@ -131,12 +133,14 @@ export function be(path: SVGPathElement, {
   strokeLinejoin = "round",
   strokeWidth = 0,
   css = false,
+  className,
   ...attributes
 }: SVGInterface,   container?: SVGElement) {
   const {points, width: pathWidth, height: pathHeight } =
     getRect({left, top, split, side, rotate, width, height, innerRadius, strokeLinejoin, strokeWidth});
 
-  if (container && container.getAttribute("class") === CLASS_NAME) {
+  if (container && hasClass(container, CLASS_NAME)) {
+    className && addClass(container, className);
     container.setAttribute("viewBox", `0 0 ${left + pathWidth + right} ${top + pathHeight + bottom}`);
   }
   const d = getPath(points);

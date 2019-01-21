@@ -1,5 +1,6 @@
 /*
 Copyright (c) 2018 Daybrush
+@name: shape-svg
 license: MIT
 author: Daybrush
 repository: https://github.com/daybrush/shape-svg

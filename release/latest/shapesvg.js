@@ -6,10 +6,10 @@ repository: https://github.com/daybrush/shape-svg
 @version 0.2.0
 */
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('@daybrush/utils')) :
-    typeof define === 'function' && define.amd ? define(['@daybrush/utils'], factory) :
-    (global.Shape = factory(global.utils));
-}(this, (function (utils) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global.Shape = factory());
+}(this, (function () { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -49,13 +49,227 @@ repository: https://github.com/daybrush/shape-svg
 
     var CLASS_NAME = "__shape-svg";
 
+    /*
+    Copyright (c) 2018 Daybrush
+    @name: @daybrush/utils
+    license: MIT
+    author: Daybrush
+    repository: https://github.com/daybrush/utils
+    @version 0.5.2
+    */
+    /**
+    * get string "undefined"
+    * @memberof Consts
+    * @example
+    import {UNDEFINED} from "@daybrush/utils";
+
+    console.log(UNDEFINED); // "undefined"
+    */
+
+    var UNDEFINED = "undefined";
+    /**
+    * Check whether the environment is window or node.js.
+    * @memberof Consts
+    * @example
+    import {IS_WINDOW} from "@daybrush/utils";
+
+    console.log(IS_WINDOW); // false in node.js
+    console.log(IS_WINDOW); // true in browser
+    */
+
+    var IS_WINDOW = typeof window !== UNDEFINED;
+    /**
+    * Check whether the environment is window or node.js.
+    * @memberof Consts
+    * @name document
+    * @example
+    import {IS_WINDOW} from "@daybrush/utils";
+
+    console.log(IS_WINDOW); // false in node.js
+    console.log(IS_WINDOW); // true in browser
+    */
+
+    var doc = typeof document !== UNDEFINED && document;
+    var prefixes = ["webkit", "ms", "moz", "o"];
+    /**
+     * @namespace CrossBrowser
+     */
+
+    /**
+    * Get a CSS property with a vendor prefix that supports cross browser.
+    * @function
+    * @param {string} property - A CSS property
+    * @return {string} CSS property with cross-browser vendor prefix
+    * @memberof CrossBrowser
+    * @example
+    import {getCrossBrowserProperty} from "@daybrush/utils";
+
+    console.log(getCrossBrowserProperty("transform")); // "transform", "-ms-transform", "-webkit-transform"
+    console.log(getCrossBrowserProperty("filter")); // "filter", "-webkit-filter"
+    */
+
+    var getCrossBrowserProperty =
+    /*#__PURE__*/
+    function (property) {
+      if (!doc) {
+        return "";
+      }
+
+      var styles = (doc.body || doc.documentElement).style;
+      var length = prefixes.length;
+
+      if (typeof styles[property] !== UNDEFINED) {
+        return property;
+      }
+
+      for (var i = 0; i < length; ++i) {
+        var name = "-" + prefixes[i] + "-" + property;
+
+        if (typeof styles[name] !== UNDEFINED) {
+          return name;
+        }
+      }
+
+      return "";
+    };
+    /**
+    * get string "transfrom" with the vendor prefix.
+    * @memberof CrossBrowser
+    * @example
+    import {TRANSFORM} from "@daybrush/utils";
+
+    console.log(TRANSFORM); // "transform", "-ms-transform", "-webkit-transform"
+    */
+
+
+    var TRANSFORM =
+    /*#__PURE__*/
+    getCrossBrowserProperty("transform");
+    /**
+    * get string "filter" with the vendor prefix.
+    * @memberof CrossBrowser
+    * @example
+    import {FILTER} from "@daybrush/utils";
+
+    console.log(FILTER); // "filter", "-ms-filter", "-webkit-filter"
+    */
+
+    var FILTER =
+    /*#__PURE__*/
+    getCrossBrowserProperty("filter");
+    /**
+    * get string "animation" with the vendor prefix.
+    * @memberof CrossBrowser
+    * @example
+    import {ANIMATION} from "@daybrush/utils";
+
+    console.log(ANIMATION); // "animation", "-ms-animation", "-webkit-animation"
+    */
+
+    var ANIMATION =
+    /*#__PURE__*/
+    getCrossBrowserProperty("animation");
+    /**
+    * get string "keyframes" with the vendor prefix.
+    * @memberof CrossBrowser
+    * @example
+    import {KEYFRAMES} from "@daybrush/utils";
+
+    console.log(KEYFRAMES); // "keyframes", "-ms-keyframes", "-webkit-keyframes"
+    */
+
+    var KEYFRAMES =
+    /*#__PURE__*/
+    ANIMATION.replace("animation", "keyframes");
+    /**
+    * Date.now() method
+    * @memberof CrossBrowser
+    * @return {number} milliseconds
+    * @example
+    import {now} from "@daybrush/utils";
+
+    console.log(now()); // 12121324241(milliseconds)
+    */
+
+
+    function now() {
+      return Date.now ? Date.now() : new Date().getTime();
+    }
+    /**
+    * window.requestAnimationFrame() method with cross browser.
+    * @function
+    * @memberof CrossBrowser
+    * @param {FrameRequestCallback} callback - The function to call when it's time to update your animation for the next repaint.
+    * @return {number} id
+    * @example
+    import {requestAnimationFrame} from "@daybrush/utils";
+
+    requestAnimationFrame((timestamp) => {
+      console.log(timestamp);
+    });
+    */
+
+
+    var requestAnimationFrame =
+    /*#__PURE__*/
+    function () {
+      var firstTime = now();
+      var raf = IS_WINDOW && (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame);
+      return raf ? raf.bind(window) : function (callback) {
+        var currTime = now();
+        var id = window.setTimeout(function () {
+          callback(currTime - firstTime);
+        }, 1000 / 60);
+        return id;
+      };
+    }();
+    /**
+    * Checks if the specified class value exists in the element's class attribute.
+    * @memberof DOM
+    * @param element - target
+    * @param className - the class name to search
+    * @return {boolean} return false if the class is not found.
+    * @example
+    import {hasClass} from "@daybrush/utils";
+
+    console.log(hasClass(element, "start")); // true or false
+    */
+
+
+    function hasClass(element, className) {
+      if (element.classList) {
+        return element.classList.contains(className);
+      }
+
+      return !!element.className.match(new RegExp("(\\s|^)" + className + "(\\s|$)"));
+    }
+    /**
+    * Add the specified class value. If these classe already exist in the element's class attribute they are ignored.
+    * @memberof DOM
+    * @param element - target
+    * @param className - the class name to add
+    * @example
+    import {addClass} from "@daybrush/utils";
+
+    addClass(element, "start");
+    */
+
+
+    function addClass(element, className) {
+      if (element.classList) {
+        element.classList.add(className);
+      } else {
+        element.className += " " + className;
+      }
+    }
+
     function makeDOM(tag) {
       return document.createElementNS("http://www.w3.org/2000/svg", tag);
     }
 
     function makeSVGDOM() {
       var el = makeDOM("svg");
-      utils.addClass(el, CLASS_NAME);
+      addClass(el, CLASS_NAME);
       return el;
     }
 
@@ -209,8 +423,8 @@ repository: https://github.com/daybrush/shape-svg
           pathWidth = _k.width,
           pathHeight = _k.height;
 
-      if (container && utils.hasClass(container, CLASS_NAME)) {
-        className && utils.addClass(container, className);
+      if (container && hasClass(container, CLASS_NAME)) {
+        className && addClass(container, className);
         container.setAttribute("viewBox", "0 0 " + (left + pathWidth + right) + " " + (top + pathHeight + bottom));
       }
 

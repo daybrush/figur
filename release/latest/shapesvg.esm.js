@@ -209,11 +209,13 @@ function be(path, _a, container) {
   if (container && hasClass(container, CLASS_NAME)) {
     className && addClass(container, className);
 
-    var _l = container.getAttribute("viewBox").split(" ").map(function (pos) {
-      return parseFloat(pos);
+    var _l = (container.getAttribute("viewBox") || "").split(" ").map(function (pos) {
+      return parseFloat(pos || "0");
     }),
-        boxWidth = _l[2],
-        boxHeight = _l[3];
+        _m = _l[2],
+        boxWidth = _m === void 0 ? 0 : _m,
+        _o = _l[3],
+        boxHeight = _o === void 0 ? 0 : _o;
 
     container.setAttribute("viewBox", "0 0 " + (Math.max(left + pathWidth + right, boxWidth) + " " + Math.max(top + pathHeight + bottom, boxHeight)));
   }

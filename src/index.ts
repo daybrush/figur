@@ -141,7 +141,11 @@ export function be(path: SVGPathElement, {
 
   if (container && hasClass(container, CLASS_NAME)) {
     className && addClass(container, className);
-    container.setAttribute("viewBox", `0 0 ${left + pathWidth + right} ${top + pathHeight + bottom}`);
+    const [, , boxWidth = 0, boxHeight = 0] = (container.getAttribute("viewBox") || "").split(" ")
+      .map(pos => parseFloat(pos || "0"));
+
+    container.setAttribute("viewBox", "0 0 " +
+    `${Math.max(left + pathWidth + right, boxWidth)} ${Math.max(top + pathHeight + bottom, boxHeight)}`);
   }
   const d = getPath(points);
 

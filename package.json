@@ -1,6 +1,6 @@
 {
   "name": "shape-svg",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Make svg polygon & star shape",
   "main": "dist/shapesvg.js",
   "module": "dist/shapesvg.esm.js",
@@ -18,6 +18,7 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "rollup -c rollup.config.dev.js -w",
     "build": "npm run build:rollup && npm run declaration && npm run release:latest",
     "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
     "build:rollup": "rollup -c",

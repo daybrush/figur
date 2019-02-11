@@ -1,23 +1,35 @@
 import { CLASS_NAME, STROKE_LINEJOIN } from "./consts";
-import {hasClass, addClass} from "@daybrush/utils";
+import {hasClass, addClass, splitUnit} from "@daybrush/utils";
 
-interface SVGInterface {
-  left?: number;
-  top?: number;
-  right?: number;
-  bottom?: number;
+export interface Shape {
+    left?: number;
+    top?: number;
+    right?: number;
+    bottom?: number;
+    width: number;
+    height: number;
+    fill?: string;
+    strokeLinejoin?: STROKE_LINEJOIN;
+    strokeWidth?: number;
+    className?: string;
+    origin?: string | number;
+    [key: string]: any;
+}
+export interface RoundRectShape extends Shape {
+  round?: number;
+  css?: boolean;
+}
+export interface PolyShape extends Shape {
   side?: number;
   split?: number;
-  width?: number;
-  height?: number;
-  strokeWidth?: number;
-  strokeLinejoin?: STROKE_LINEJOIN;
-  innerRadius?: number;
   css?: boolean;
-  className?: string;
-  [key: string]: any;
+  innerRadius?: number;
 }
-
+export interface OvalShape extends Shape {
+  r?: number;
+  rx?: number;
+  ry?: number;
+}
 function makeDOM(tag: string) {
   return document.createElementNS("http://www.w3.org/2000/svg", tag);
 }
@@ -40,6 +52,72 @@ function setStyles(element: SVGElement, styles: {[key: string]: any}) {
   }
   element.style.cssText += cssText.join("");
 }
+function getAbsoluteValue(value: string, pos: number, size: number) {
+  const info = splitUnit(value);
+
+  if (info.unit === "%") {
+    return (pos + size * info.value / 100) + "px";
+  } else if (info.unit === "px") {
+    return (pos + info.value) + "px";
+  } else {
+    return `calc(${pos}px + ${value})`;
+  }
+}
+function setOrigin(container: SVGElement, {
+  width,
+  height,
+  left,
+  top,
+  origin,
+}: {
+  width: number,
+  height: number,
+  left: number,
+  top: number,
+  origin: string | number,
+}) {
+  if (!origin) {
+    return;
+  }
+  let [ox, oy = ox]: string[] = `${origin}`.split(" ");
+
+  ox = getAbsoluteValue(ox, left, width);
+  oy = getAbsoluteValue(oy, top, height);
+
+  container.style.transformOrigin = `${ox} ${oy}`;
+}
+function setViewBox(container: SVGElement, {
+  width,
+  height,
+  left,
+  right,
+  bottom,
+  top,
+  strokeWidth,
+  className,
+}: {
+  width: number,
+  height: number,
+  left: number,
+  right: number,
+  bottom: number,
+  top: number,
+  strokeWidth: number,
+  className?: string,
+}) {
+  if (container && hasClass(container, CLASS_NAME)) {
+    className && className.split(" ").forEach(name => {
+      addClass(container, name);
+    });
+    const [, , boxWidth = 0, boxHeight = 0] = (container.getAttribute("viewBox") || "").split(" ")
+      .map(pos => parseFloat(pos || "0"));
+
+    container.setAttribute("viewBox", "0 0 " +
+    // tslint:disable-next-line:max-line-length
+    `${Math.max(left + width + right + strokeWidth, boxWidth)} ${Math.max(top + height + bottom + strokeWidth, boxHeight)}`);
+  }
+}
+
 export function getRect({
   left = 0,
   top = 0,
@@ -51,7 +129,7 @@ export function getRect({
   width = height ? 0 : 100,
   strokeLinejoin = "round",
   strokeWidth = 0,
-}: SVGInterface) {
+}: PolyShape) {
   let xPoints: number[] = [];
   let yPoints: number[] = [];
   const sideCos = Math.cos(Math.PI / side);
@@ -135,18 +213,20 @@ export function be(path: SVGPathElement, {
   css = false,
   className,
   ...attributes
-}: SVGInterface,   container?: SVGElement) {
+}: PolyShape,      container?: SVGElement) {
   const {points, width: pathWidth, height: pathHeight } =
     getRect({left, top, split, side, rotate, width, height, innerRadius, strokeLinejoin, strokeWidth});
 
-  if (container && hasClass(container, CLASS_NAME)) {
-    className && addClass(container, className);
-    const [, , boxWidth = 0, boxHeight = 0] = (container.getAttribute("viewBox") || "").split(" ")
-      .map(pos => parseFloat(pos || "0"));
-
-    container.setAttribute("viewBox", "0 0 " +
-    `${Math.max(left + pathWidth + right, boxWidth)} ${Math.max(top + pathHeight + bottom, boxHeight)}`);
-  }
+  setViewBox(container, {
+      left,
+      top,
+      bottom,
+      right,
+      className,
+      strokeWidth: 0,
+      width: pathWidth,
+      height: pathHeight,
+    });
   const d = getPath(points);
 
   css ? setStyles(path, {d : `path('${d}')`}) : setAttributes(path, {d});
@@ -161,14 +241,121 @@ export function be(path: SVGPathElement, {
 export function star({
   side = 3,
   innerRadius = 60 * Math.cos(Math.PI / side),
-}: SVGInterface,     container?: SVGAElement) {
+}: PolyShape,        container?: SVGElement) {
   return poly({...arguments[0], innerRadius}, container);
 }
-export function poly(options: SVGInterface, container: SVGElement = makeSVGDOM()) {
+export function poly(options: PolyShape, container: SVGElement = makeSVGDOM()) {
   const path: SVGPathElement = makeDOM("path") as SVGPathElement;
 
   be(path, options, container);
   container.appendChild(path);
+  return container;
+}
+export function oval({
+  left = 0,
+  top = 0,
+  right = 0,
+  bottom = 0,
+  fill = "transparent",
+  strokeLinejoin = "round",
+  strokeWidth = 0,
+  className,
+  r = 0,
+  rx = r,
+  ry = r,
+  width = rx * 2,
+  height = ry * 2,
+  origin,
+  ...attributes
+}: OvalShape,
+                     container: SVGElement = makeSVGDOM(),
+) {
+  const ellipse: SVGEllipseElement = makeDOM("ellipse") as SVGEllipseElement;
+  const halfStroke = strokeWidth / 2;
+
+  setViewBox(container, {
+    strokeWidth,
+    left,
+    top,
+    bottom,
+    right,
+    className,
+    width,
+    height,
+  });
+  setOrigin(ellipse, {
+    left: left + halfStroke,
+    top: top + halfStroke,
+    width,
+    height,
+    origin,
+  });
+
+  setAttributes(ellipse, {
+    fill,
+    "cx": left + halfStroke + width / 2,
+    "cy": top  + halfStroke + height / 2,
+    "rx": width / 2 - halfStroke,
+    "ry": height / 2 - halfStroke,
+    "stroke-linejoin": strokeLinejoin,
+    "stroke-width": `${strokeWidth}`,
+    ...attributes,
+  });
+  container.appendChild(ellipse);
+
+  return container;
+}
+export function rect({
+  left = 0,
+  top = 0,
+  right = 0,
+  bottom = 0,
+  round = 0,
+  width,
+  height,
+  fill = "transparent",
+  strokeLinejoin = "round",
+  strokeWidth = 0,
+  css = false,
+  className,
+  ...attributes
+}: RoundRectShape,
+                     container: SVGElement = makeSVGDOM(),
+) {
+  const path: SVGPathElement = makeDOM("path") as SVGPathElement;
+  setViewBox(container, {
+    left,
+    top,
+    bottom,
+    right,
+    className,
+    width,
+    height,
+    strokeWidth,
+  });
+  setOrigin(path, {
+    left,
+    top,
+    width,
+    height,
+    origin,
+  });
+  const halfStroke = strokeWidth / 2;
+  const pathWidth = width - round * 2;
+  const pathHeight = height - round * 2;
+  // tslint:disable-next-line:max-line-length
+  const d = `M${left + round + halfStroke},${top + halfStroke} h${pathWidth} a${round},${round} 0 0 1 ${round},${round} v${pathHeight} a${round},${round} 0 0 1 -${round},${round} h-${pathWidth} a${round},${round} 0 0 1 -${round},-${round} v-${pathHeight} a${round},${round} 0 0 1 ${round},-${round} z`;
+
+  css ? setStyles(path, {d : `path('${d}')`}) : setAttributes(path, {d});
+
+  setAttributes(path, {
+    fill,
+    "stroke-linejoin": strokeLinejoin,
+    "stroke-width": `${strokeWidth}`,
+    ...attributes,
+  });
+  container.appendChild(path);
+
   return container;
 }
 export const VERSION = "#__VERSION__#";

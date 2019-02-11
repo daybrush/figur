@@ -16,28 +16,42 @@ import {poly, star} from "shape-svg";
 
 import { CLASS_NAME, STROKE_LINEJOIN } from "./consts";
 
-interface SVGInterface {
-  left?: number;
-  top?: number;
-  right?: number;
-  bottom?: number;
+export interface Shape {
+    left?: number;
+    top?: number;
+    right?: number;
+    bottom?: number;
+    width: number;
+    height: number;
+    fill?: string;
+    strokeLinejoin?: STROKE_LINEJOIN;
+    strokeWidth?: number;
+    className?: string;
+    origin?: string | number;
+    [key: string]: any;
+}
+export interface RoundRectShape extends Shape {
+  round?: number;
+  css?: boolean;
+}
+export interface PolyShape extends Shape {
   side?: number;
   split?: number;
-  width?: number;
-  height?: number;
-  strokeWidth?: number;
-  strokeLinejoin?: STROKE_LINEJOIN;
-  innerRadius?: number;
   css?: boolean;
-  className?: string;
-  [key: string]: any;
+  innerRadius?: number;
+}
+export interface OvalShape extends Shape {
+  r?: number;
+  rx?: number;
+  ry?: number;
 }
 
-export function poly(options: SVGInterface, container?: SVGElement): SVGElement; // container(SVG)
-export function star(options: SVGInterface, container?: SVGElement): SVGElement; // container(SVG)
-export function be(path: SVGPathElement, options: SVGInterface, container?: SVGElement): void;
-export function getRect(options: SVGInterface): {points: number[][], width: number, height: number};
-export function getPath(points: number[][]): string; // path('M 0 0 L 0 0 Z');
+export function getPath(points: number[][]): string;  // path('M 0 0 L 0 0 Z');
+export function be(path: SVGPathElement, options: PolyShape, container?: SVGElement): void;
+export function star(options: PolyShape, container?: SVGElement): SVGElement;
+export function poly(options: PolyShape, container?: SVGElement): SVGElement;
+export function oval(options: OvalShape, container?: SVGElement): SVGElement;
+export function rect(options: RoundRectShape, container?: SVGElement): SVGElement;
 ```
 
 

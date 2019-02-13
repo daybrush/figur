@@ -6,8 +6,8 @@ export interface Shape {
     top?: number;
     right?: number;
     bottom?: number;
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
     fill?: string;
     strokeLinejoin?: STROKE_LINEJOIN;
     strokeWidth?: number;

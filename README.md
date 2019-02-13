@@ -21,8 +21,8 @@ export interface Shape {
     top?: number;
     right?: number;
     bottom?: number;
-    width: number;
-    height: number;
+    width?: number;
+    heigh?t: number;
     fill?: string;
     strokeLinejoin?: STROKE_LINEJOIN;
     strokeWidth?: number;

@@ -362,8 +362,8 @@ function oval(_a, container) {
   });
   setAttributes(ellipse, __assign({
     fill: fill,
-    "cx": left + width / 2,
-    "cy": top + height / 2,
+    "cx": left + halfStroke + width / 2,
+    "cy": top + halfStroke + height / 2,
     "rx": width / 2 - halfStroke,
     "ry": height / 2 - halfStroke,
     "stroke-linejoin": strokeLinejoin,

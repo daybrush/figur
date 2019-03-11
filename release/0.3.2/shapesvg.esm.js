@@ -364,8 +364,8 @@ function oval(_a, container) {
     fill: fill,
     "cx": left + halfStroke + width / 2,
     "cy": top + halfStroke + height / 2,
-    "rx": width / 2 - halfStroke,
-    "ry": height / 2 - halfStroke,
+    "rx": width / 2,
+    "ry": height / 2,
     "stroke-linejoin": strokeLinejoin,
     "stroke-width": "" + strokeWidth
   }, attributes));

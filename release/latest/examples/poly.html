@@ -1,0 +1,36 @@
+<script src="../dist/shapesvg.min.js"></script>
+<style>
+body {
+  padding: 10px;
+  text-align: center;
+}
+.__shape-svg, .star {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  /* border: 1px solid black; */
+  opacity: 0.7;
+  vertical-align: top;
+  margin: 10px;
+}
+#poly .__shape-poly-side {
+  transition: transform ease 1s;
+}
+#poly .__shape-poly-side0, #poly .__shape-poly-side-percent {
+  transition: all ease 1s;
+}
+</style>
+<div id="poly"></div>
+
+<script>
+  const poly1 = Shape.poly({strokeWidth: 10, stroke: "#F55", width: 100});
+  const poly2 = Shape.poly({strokeWidth: 10, stroke: "#5e5", width: 100, side: 4});
+  const poly3 = Shape.poly({strokeWidth: 10, stroke: "#55e", width: 100, side: 5});
+  const poly4 = Shape.star({strokeWidth: 10, stroke: "#5ee", width: 100, innerRadius: 40, side: 5});
+
+  poly.appendChild(poly1);
+  poly.appendChild(poly2);
+  poly.appendChild(poly3);
+  poly.appendChild(poly4);
+
+</script>

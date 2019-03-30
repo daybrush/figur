@@ -22,11 +22,7 @@
     "build": "npm run build:rollup && npm run declaration && npm run release:latest",
     "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
     "build:rollup": "rollup -c",
-    "deploy": "gh-pages -d ./demo --dest=./ --add",
-    "release": "npm run build && npm run release:current && npm run deploy",
-    "release:mkdir": "mkdir -p ./demo/release",
-    "release:current": "npm run release:mkdir && rm -rf ./demo/release/$npm_package_version && cp -a ./dist/. ./demo/release/$npm_package_version",
-    "release:latest": "npm run release:mkdir && rm -rf ./demo/release/latest && cp -a ./dist/. ./demo/release/latest"
+    "release": "release --dirs examples,dist"
   },
   "repository": {
     "type": "git",
@@ -40,6 +36,7 @@
   "homepage": "https://github.com/daybrush/shape-svg#readme",
   "devDependencies": {
     "@daybrush/jsdoc": "^0.3.3",
+    "@daybrush/release": "0.0.6",
     "gh-pages": "^2.0.1",
     "rollup": "^0.66.6",
     "rollup-plugin-node-resolve": "^4.0.0",

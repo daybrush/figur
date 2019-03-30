@@ -57,7 +57,8 @@ export function rect(options: RoundRectShape, container?: SVGElement): SVGElemen
 
 ## How to Use
 ```html
-<script src="//daybrush.github.io/shape-svg/release/latest/shapesvg.min.js"></script>
+<script src="//daybrush.github.io/shape-svg/release/latest/dist/shapesvg.js"></script>
+<script src="//daybrush.github.io/shape-svg/release/latest/dist/shapesvg.min.js"></script>
 ```
 ```js
 import {poly, star, be} from "shape-svg";

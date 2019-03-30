@@ -19,10 +19,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "rollup -c rollup.config.dev.js -w",
-    "build": "npm run build:rollup && npm run declaration && npm run release:latest",
+    "build": "npm run build:rollup && npm run declaration",
     "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
     "build:rollup": "rollup -c",
-    "release": "release --dirs examples,dist"
+    "release": "npm run build && release --dirs examples,dist"
   },
   "repository": {
     "type": "git",

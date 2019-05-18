@@ -1,9 +1,9 @@
 {
   "name": "shape-svg",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Make svg polygon & star shape",
-  "main": "dist/shape-svg.js",
-  "module": "dist/shape-svg.esm.js",
+  "main": "dist/shape.js",
+  "module": "dist/shape.esm.js",
   "sideEffects": false,
   "types": "declaration/index.d.ts",
   "keywords": [

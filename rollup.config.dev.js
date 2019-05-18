@@ -55,7 +55,7 @@ export default [
       format: "umd",
       name: "Shape",
       exports: "default",
-      file: `./dist/shape-svg.js`,
+      file: `./dist/shape.js`,
     },
   }, {
     input: 'src/index.umd.ts',
@@ -64,7 +64,7 @@ export default [
       format: "umd",
       name: "Shape",
       exports: "default",
-      file: `./dist/shape-svg.min.js`,
+      file: `./dist/shape.min.js`,
     },
   }
 ].map(entry => merge(defaultConfig, entry, {

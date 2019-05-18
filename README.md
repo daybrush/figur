@@ -1,4 +1,4 @@
-# shape-svg  [![npm version](https://badge.fury.io/js/shape-svg.svg)](https://badge.fury.io/js/shape-svg)
+# shape-svg  [![npm version](https://badge.fury.io/js/shape.svg)](https://badge.fury.io/js/shape-svg)
 
 ![](./polygon.png)
 
@@ -57,8 +57,8 @@ export function rect(options: RoundRectShape, container?: SVGElement): SVGElemen
 
 ## How to Use
 ```html
-<script src="//daybrush.github.io/shape-svg/release/latest/dist/shape-svg.js"></script>
-<script src="//daybrush.github.io/shape-svg/release/latest/dist/shape-svg.min.js"></script>
+<script src="//daybrush.github.io/shape-svg/release/latest/dist/shape.js"></script>
+<script src="//daybrush.github.io/shape-svg/release/latest/dist/shape.min.js"></script>
 ```
 ```js
 import {poly, star, be} from "shape-svg";

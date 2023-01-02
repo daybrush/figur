@@ -16,7 +16,7 @@ function elementToJsx(
     const attributesProps: Record<string, any> = {};
     const children = element.children;
     const childrenLength = children.length;
-    const className = element.className;
+    let className: any = element.className;
     const elementStyle = element.style!;
     const style: React.CSSProperties = {
         ...reactStyle,
@@ -44,6 +44,9 @@ function elementToJsx(
     }
 
 
+    if (className && "baseVal" in className) {
+        className = className.baseVal;
+    }
     return <TagName ref={ref} {...attributesProps} className={className} key={key} style={style}>
         {jsxChildren}
     </TagName>;

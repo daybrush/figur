@@ -1,12 +1,42 @@
 {
     "name": "react-shape-svg",
     "version": "0.1.0",
-    "private": true,
+    "description": "Make svg polygon & star shape for React",
+    "main": "dist/shape-svg.cjs.js",
+    "module": "dist/shape-svg.esm.js",
+    "sideEffects": false,
+    "types": "declaration/index.d.ts",
+    "keywords": [
+        "shape",
+        "svg",
+        "triangle",
+        "js",
+        "tri",
+        "poly",
+        "polygon",
+        "star"
+    ],
+    "files": [
+        "./*",
+        "dist/*",
+        "declaration/*"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/daybrush/shape-svg"
+    },
+    "author": "Daybrush",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/daybrush/shape-svg/issues"
+    },
+    "homepage": "https://github.com/daybrush/shape-svg#readme",
     "dependencies": {
         "@daybrush/utils": "^1.10.2",
         "shape-svg": "^0.4.0"
     },
     "devDependencies": {
+        "@daybrush/builder": "^0.2.0",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^13.4.0",
         "@testing-library/user-event": "^13.5.0",
@@ -22,7 +52,8 @@
     },
     "scripts": {
         "start": "react-scripts start",
-        "build": "react-scripts build",
+        "build": "rollup -c && npm run declaration",
+        "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },

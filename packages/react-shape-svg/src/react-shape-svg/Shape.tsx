@@ -2,8 +2,7 @@
 
 import { camelize } from "@daybrush/utils";
 import * as React from "react";
-import { start } from "repl";
-import { oval, OvalShape, poly, PolyShape, ShapeDOM, star } from "shape-svg";
+import { oval, OvalShape, poly, PolyShape, rect, RoundRectShape, ShapeDOM, star } from "shape-svg";
 
 function elementToJsx(
     element: ShapeDOM,
@@ -78,3 +77,15 @@ export const Star = React.forwardRef<SVGSVGElement, StarProps>((props, ref) => {
 });
 
 Star.displayName = "Star";
+
+
+export interface RectProps extends RoundRectShape {
+
+}
+export const Rect = React.forwardRef<SVGSVGElement, RectProps>((props, ref) => {
+    const rectShape = React.useMemo(() => rect(props) as ShapeDOM, []);
+
+    return elementToJsx(rectShape, null, ref);
+});
+
+Rect.displayName = "Rect";

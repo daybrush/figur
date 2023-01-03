@@ -1,6 +1,6 @@
 {
     "name": "react-shape-svg",
-    "version": "0.1.2",
+    "version": "0.1.4",
     "description": "Make svg polygon & star shape for React",
     "main": "dist/shape-svg.cjs.js",
     "module": "dist/shape-svg.esm.js",

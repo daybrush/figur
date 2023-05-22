@@ -12,6 +12,8 @@ export interface FigurDOM {
     };
     className: string;
     attributes: FigurAttributes;
+    innerHTML: string;
+    outerHTML: string;
     style?: {
         cssText: string;
         item(index: number): string;
@@ -91,11 +93,30 @@ export function createVirtualDOM(tagName: string): FigurDOM {
         },
     };
     const children: FigurDOM[] = [];
+
+    function innerHTML() {
+        return children.map(child => child.outerHTML).join("");
+    }
     return {
         tagName,
         attributes,
         children,
         className: "",
+        get innerHTML() {
+            return innerHTML();
+        },
+        get outerHTML() {
+            const html = innerHTML();
+            const length = attributes.length;
+            const attrTexts: string[] = [];
+
+            for (let i = 0; i < length; ++i) {
+                const attr = attributes.item(i);
+
+                attrTexts.push(` ${attr.name}="${attr.value}"`);
+            }
+            return `<${tagName}${attrTexts.join("")}>${html}</${tagName}>`;
+        },
         appendChild(child: FigurDOM) {
             children.push(child);
         },

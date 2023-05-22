@@ -1,8 +1,11 @@
 import { CLASS_NAME, STROKE_LINEJOIN } from "./consts";
 import { hasClass, addClass, splitUnit } from "@daybrush/utils";
-import { createVirtualDOM, ShapeDOM } from "./VirtualDOM";
+import { createVirtualDOM, FigurDOM } from "./VirtualDOM";
 
-export interface Shape {
+/**
+ * @typedef
+ */
+export interface Figur {
     left?: number;
     top?: number;
     right?: number;
@@ -17,23 +20,39 @@ export interface Shape {
     [key: string]: any;
 }
 
-export interface RoundRectShape extends Shape {
+export interface FigureInfo {
+    width: number;
+    height: number;
+    points: number[][];
+}
+/**
+ * @typedef
+ */
+export interface RoundRectFigur extends Figur {
     round?: number;
     css?: boolean;
 }
-export interface PolyShape extends Shape {
+
+/**
+ * @typedef
+ */
+export interface PolyFigur extends Figur {
     side?: number;
     split?: number;
     css?: boolean;
     innerRadius?: number;
 }
-export interface OvalShape extends Shape {
+
+/**
+ * @typedef
+ */
+export interface OvalFigur extends Figur {
     r?: number;
     rx?: number;
     ry?: number;
 }
 
-function makeDOM(tag: string): ShapeDOM {
+function makeDOM(tag: string): FigurDOM {
     if (typeof document === "undefined") {
         return createVirtualDOM(tag);
     } else {
@@ -41,19 +60,19 @@ function makeDOM(tag: string): ShapeDOM {
     }
 }
 
-function makeSVGDOM(): ShapeDOM {
+function makeSVGDOM(): FigurDOM {
     const el = makeDOM("svg");
 
     addClass(el as Element, CLASS_NAME);
 
     return el;
 }
-function setAttributes(element: ShapeDOM, attributes: { [key: string]: any }) {
+function setAttributes(element: FigurDOM, attributes: { [key: string]: any }) {
     for (const name in attributes) {
         element.setAttribute(name, attributes[name]);
     }
 }
-function setStyles(element: ShapeDOM, styles: { [key: string]: any }) {
+function setStyles(element: FigurDOM, styles: { [key: string]: any }) {
     const cssText = [];
 
     for (const name in styles) {
@@ -72,7 +91,7 @@ function getAbsoluteValue(value: string, pos: number, size: number) {
         return `calc(${pos}px + ${value})`;
     }
 }
-function setOrigin(container: ShapeDOM, {
+function setOrigin(container: FigurDOM, {
     width,
     height,
     left,
@@ -95,7 +114,8 @@ function setOrigin(container: ShapeDOM, {
 
     container.style.cssText += `transform-origin: ${ox} ${oy};`;
 }
-function setViewBox(container: ShapeDOM, {
+
+function setViewBox(container: FigurDOM, {
     width,
     height,
     left,
@@ -127,7 +147,10 @@ function setViewBox(container: ShapeDOM, {
     }
 }
 
-export function getRect(shape: PolyShape) {
+/**
+ * Returns point, width, and height for figur information.
+ */
+export function getRect(figur: PolyFigur): FigureInfo {
     const {
         left = 0,
         top = 0,
@@ -139,7 +162,7 @@ export function getRect(shape: PolyShape) {
         width = height ? 0 : 100,
         strokeLinejoin = "round",
         strokeWidth = 0,
-    } = shape;
+    } = figur;
     let xPoints: number[] = [];
     let yPoints: number[] = [];
     const sideCos = Math.cos(Math.PI / side);
@@ -208,7 +231,10 @@ export function getPath(points: number[][]) {
     }).join(" ") + " Z";
 }
 
-export function be(path: SVGPathElement, shape: PolyShape, container?: ShapeDOM) {
+/**
+ * Transform the shape of a polygon type.
+ */
+export function be(path: SVGPathElement, figur: PolyFigur, container?: FigurDOM) {
     const {
         left = 0,
         top = 0,
@@ -226,7 +252,7 @@ export function be(path: SVGPathElement, shape: PolyShape, container?: ShapeDOM)
         css = false,
         className,
         ...attributes
-    } = shape
+    } = figur
     const {
         points,
         width: pathWidth,
@@ -258,24 +284,36 @@ export function be(path: SVGPathElement, shape: PolyShape, container?: ShapeDOM)
     });
 }
 
-export function star(shape: PolyShape, container?: ShapeDOM) {
+/**
+ * Create a star-shaped svg element.
+ * If the container exists, it is inserted into the container.
+ */
+export function star(figur: PolyFigur, container?: FigurDOM) {
     const {
         side = 3,
         innerRadius = 60 * Math.cos(Math.PI / side),
-    } = shape;
+    } = figur;
     return poly({ ...arguments[0], innerRadius }, container);
 }
 
-export function poly(shape: PolyShape, container: ShapeDOM = makeSVGDOM()) {
+/**
+ * Create a polygon-shaped svg element.
+ * If the container exists, it is inserted into the container.
+ */
+export function poly(figur: PolyFigur, container: FigurDOM = makeSVGDOM()) {
     const path: SVGPathElement = makeDOM("path") as SVGPathElement;
 
-    be(path, shape, container);
+    be(path, figur, container);
     container.appendChild(path);
 
     return container as SVGElement;
 }
 
-export function oval(shape: OvalShape, container: ShapeDOM = makeSVGDOM()) {
+/**
+ * Create a oval-shaped svg element.
+ * If the container exists, it is inserted into the container.
+ */
+export function oval(figur: OvalFigur, container: FigurDOM = makeSVGDOM()) {
     const {
         left = 0,
         top = 0,
@@ -292,7 +330,7 @@ export function oval(shape: OvalShape, container: ShapeDOM = makeSVGDOM()) {
         height = ry * 2,
         origin,
         ...attributes
-    } = shape;
+    } = figur;
     const ellipse: SVGEllipseElement = makeDOM("ellipse") as SVGEllipseElement;
     const halfStroke = strokeWidth / 2;
 
@@ -329,9 +367,13 @@ export function oval(shape: OvalShape, container: ShapeDOM = makeSVGDOM()) {
     return container as SVGElement;
 }
 
+/**
+ * Create a rect-shaped svg element.
+ * If the container exists, it is inserted into the container.
+ */
 export function rect(
-    shape: RoundRectShape,
-    container: ShapeDOM = makeSVGDOM(),
+    figur: RoundRectFigur,
+    container: FigurDOM = makeSVGDOM(),
 ) {
     const {
         left = 0,
@@ -347,7 +389,7 @@ export function rect(
         css = false,
         className,
         ...attributes
-    } = shape;
+    } = figur;
     const path: SVGPathElement = makeDOM("path") as SVGPathElement;
     setViewBox(container, {
         left,

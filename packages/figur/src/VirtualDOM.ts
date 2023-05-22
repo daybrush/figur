@@ -1,17 +1,17 @@
 import { camelize, getKeys, splitText } from "@daybrush/utils";
 
-export interface ShapeDOM {
+export interface FigurDOM {
     tagName: string;
     setAttribute(name: string, value: string): void;
     getAttribute(name: string): string | null;
     appendChild<T extends Node>(node: T): T;
-    appendChild<T extends ShapeDOM>(node: T): T;
+    appendChild<T extends FigurDOM>(node: T): T;
     children: {
-        [index: number]: ShapeDOM;
+        [index: number]: FigurDOM;
         length: number;
     };
     className: string;
-    attributes: ShapeAttributes;
+    attributes: FigurAttributes;
     style?: {
         cssText: string;
         item(index: number): string;
@@ -21,15 +21,15 @@ export interface ShapeDOM {
     };
 }
 
-export interface ShapeAttr {
+export interface FigurAttr {
     name: string;
     value: string;
 }
 
-export interface ShapeAttributes {
-    item(number: number): ShapeAttr | null;
+export interface FigurAttributes {
+    item(number: number): FigurAttr | null;
     length: number;
-    [index: number]: ShapeAttr;
+    [index: number]: FigurAttr;
 }
 
 
@@ -55,11 +55,11 @@ function splitStyle(str: string) {
 }
 
 
-export function createVirtualDOM(tagName: string): ShapeDOM {
-    const attrs: ShapeAttr[] = [];
-    const attributeMap: Record<string, ShapeAttr> = {};
-    const attributes: ShapeAttributes = {
-        item(index: number): ShapeAttr | null {
+export function createVirtualDOM(tagName: string): FigurDOM {
+    const attrs: FigurAttr[] = [];
+    const attributeMap: Record<string, FigurAttr> = {};
+    const attributes: FigurAttributes = {
+        item(index: number): FigurAttr | null {
             return attrs[index] || null;
         },
         get length() {
@@ -70,7 +70,7 @@ export function createVirtualDOM(tagName: string): ShapeDOM {
     let styles: Record<string, string> = {};
     let keys: string[] = [];
 
-    const style: ShapeDOM["style"] = {
+    const style: FigurDOM["style"] = {
         get length() {
             return keys.length;
         },
@@ -90,13 +90,13 @@ export function createVirtualDOM(tagName: string): ShapeDOM {
             keys = getKeys(styles);
         },
     };
-    const children: ShapeDOM[] = [];
+    const children: FigurDOM[] = [];
     return {
         tagName,
         attributes,
         children,
         className: "",
-        appendChild(child: ShapeDOM) {
+        appendChild(child: FigurDOM) {
             children.push(child);
         },
         getAttribute(name: string) {

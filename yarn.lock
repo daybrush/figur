@@ -1206,29 +1206,6 @@
     rollup "^3.7.1"
     rollup-plugin-visualizer "^5.8.3"
 
-"@daybrush/jsdoc@^0.3.3":
-  version "0.3.12"
-  resolved "https://registry.npmjs.org/@daybrush/jsdoc/-/jsdoc-0.3.12.tgz#22fc3a008eb52a01eae728d8b75fe7661cc71d48"
-  integrity sha512-aejzziZRBQH7pQXyt9DBeJt80Z2prmkFPFSCXspvN0XWTBeDkonZst5Ku3IzB4CXhd17fGa6hAhX4l/e3x20Bg==
-  dependencies:
-    "@babel/parser" "^7.2.3"
-    "@babel/types" "^7.2.2"
-    "@daybrush/utils" "^1.0.0"
-    ast-parser "^0.1.1"
-    bluebird "~3.5.0"
-    catharsis "~0.8.9"
-    escape-string-regexp "~1.0.5"
-    js2xmlparser "~3.0.0"
-    klaw "~2.0.0"
-    markdown-it "~8.3.1"
-    markdown-it-named-headers "~0.0.4"
-    marked "~0.3.6"
-    mkdirp "~0.5.1"
-    requizzle "~0.2.1"
-    strip-json-comments "~2.0.1"
-    taffydb "2.6.2"
-    underscore "~1.8.3"
-
 "@daybrush/jsdoc@^0.4.0", "@daybrush/jsdoc@^0.4.4":
   version "0.4.4"
   resolved "https://registry.npmjs.org/@daybrush/jsdoc/-/jsdoc-0.4.4.tgz#46234ba59298cffba8f8577de53b4c723e0d91b4"
@@ -1252,15 +1229,6 @@
     taffydb "2.6.2"
     underscore "~1.8.3"
 
-"@daybrush/release@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.npmjs.org/@daybrush/release/-/release-0.0.6.tgz#e4f34e1dad936933a11ffac4eba043d6c2e3f439"
-  integrity sha512-MpT+JK1z1sRr7cXCm6GT3NBvajg3MBkiCJ19tU3n2NbXvwlNFq7VkDEYhAGuYZR0/MlsTPLwMOUOl4l4rObI5g==
-  dependencies:
-    args "^5.0.1"
-    gh-pages "^2.0.1"
-    sync-exec "^0.6.2"
-
 "@daybrush/release@^0.7.1":
   version "0.7.1"
   resolved "https://registry.npmjs.org/@daybrush/release/-/release-0.7.1.tgz#2bf71cae4a51db36088865256e724458a5bb99ee"
@@ -1280,7 +1248,7 @@
   resolved "https://registry.npmjs.org/@daybrush/utils/-/utils-0.11.0.tgz#3fd113fcedaab29d8c80773ca5f4d32551bdc9d8"
   integrity sha512-PnrY1NDjXqXKASoREcjHokQt0WWHiUBClMJ0l9APx42QkeOCQ5nXB7k4VdmkaU23BndeSmNNYJDNL6eEsRitaA==
 
-"@daybrush/utils@^1.0.0", "@daybrush/utils@^1.10.2", "@daybrush/utils@^1.6.0":
+"@daybrush/utils@^1.10.2", "@daybrush/utils@^1.6.0":
   version "1.10.2"
   resolved "https://registry.npmjs.org/@daybrush/utils/-/utils-1.10.2.tgz#fb10bab437d1bb3d052fa49ca01f23c86a2ad1f1"
   integrity sha512-fNMWeGUDokdIpebU8oIBUXkyGYITCwwodBfgx277p8d+kvI+k9wdFtKtdY4mvbWxhbAwuWprtVDq8My3KQ24Dg==
@@ -3816,15 +3784,6 @@ assign-symbols@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/assign-symbols/-/assign-symbols-1.0.0.tgz#59667f41fadd4f20ccbc2bb96b8d4f7f78ec0367"
   integrity sha512-Q+JC7Whu8HhmTdBph/Tq59IoRtoy6KAm5zzPv00WdujX82lbAL8K7WVjne7vdCsAmbF4AYaDOPyO3k0kl8qIrw==
-
-ast-parser@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.npmjs.org/ast-parser/-/ast-parser-0.1.1.tgz#cbf41f23cc39bd656c1f8e58e1ae8591ad98afc1"
-  integrity sha512-IFkSxogYovWJivO7cnjaCQatLRPV7i3tzCbGFi9QGHczxJzkxKFuJYdwBGdRLg0f1nAqaHS2k9k1GO0INZ+gKQ==
-  dependencies:
-    "@babel/traverse" "^7.2.3"
-    "@babel/types" "^7.3.0"
-    "@daybrush/utils" "^0.11.0"
 
 ast-parser@^0.2.0:
   version "0.2.0"

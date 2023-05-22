@@ -2,10 +2,10 @@
 
 import { camelize } from "@daybrush/utils";
 import * as React from "react";
-import { oval, OvalShape, poly, PolyShape, rect, RoundRectShape, ShapeDOM, star } from "figur";
+import { oval, OvalFigur, poly, PolyFigur, rect, RoundRectFigur, FigurDOM, star } from "figur";
 
 function elementToJsx(
-    element: ShapeDOM,
+    element: FigurDOM,
     key: string | number | null = null,
     reactStyle: React.CSSProperties = {},
     ref: React.ForwardedRef<SVGSVGElement> | null = null,
@@ -52,36 +52,37 @@ function elementToJsx(
     </TagName>;
 }
 
-export interface OvalProps extends OvalShape {
+export interface OvalProps extends OvalFigur {
     style?: React.CSSProperties;
 }
 
 export const Oval = React.forwardRef<SVGSVGElement, OvalProps>((props, ref) => {
     const { style, ...shape } = props;
-    const ovalShape = React.useMemo(() => oval(shape) as ShapeDOM, []);
+    const ovalShape = React.useMemo(() => oval(shape) as FigurDOM, []);
 
     return elementToJsx(ovalShape, null, style, ref);
 });
 Oval.displayName = "Oval";
-export interface PolyProps extends PolyShape {
 
+export interface PolyProps extends PolyFigur {
+    style?: React.CSSProperties;
 }
 
 export const Poly = React.forwardRef<SVGSVGElement, PolyProps>((props, ref) => {
     const { style, ...shape } = props;
-    const polyShape = React.useMemo(() => poly(shape) as ShapeDOM, []);
+    const polyShape = React.useMemo(() => poly(shape) as FigurDOM, []);
 
     return elementToJsx(polyShape, null, style, ref);
 });
 
 Poly.displayName = "Poly";
 
-export interface StarProps extends PolyShape {
+export interface StarProps extends PolyFigur {
     style?: React.CSSProperties;
 }
 export const Star = React.forwardRef<SVGSVGElement, StarProps>((props, ref) => {
     const { style, ...shape } = props;
-    const starShape = React.useMemo(() => star(shape) as ShapeDOM, []);
+    const starShape = React.useMemo(() => star(shape) as FigurDOM, []);
 
     return elementToJsx(starShape, null, style, ref);
 });
@@ -89,12 +90,12 @@ export const Star = React.forwardRef<SVGSVGElement, StarProps>((props, ref) => {
 Star.displayName = "Star";
 
 
-export interface RectProps extends RoundRectShape {
+export interface RectProps extends RoundRectFigur {
     style?: React.CSSProperties;
 }
 export const Rect = React.forwardRef<SVGSVGElement, RectProps>((props, ref) => {
     const { style, ...shape } = props;
-    const rectShape = React.useMemo(() => rect(shape) as ShapeDOM, []);
+    const rectShape = React.useMemo(() => rect(shape) as FigurDOM, []);
 
     return elementToJsx(rectShape, null, style, ref);
 });
@@ -102,12 +103,12 @@ export const Rect = React.forwardRef<SVGSVGElement, RectProps>((props, ref) => {
 Rect.displayName = "Rect";
 
 export interface RawProps {
-    shapeDOM: ShapeDOM;
+    FigurDOM: FigurDOM;
     style?: React.CSSProperties;
 }
 
 export const Raw = React.forwardRef<SVGSVGElement, RawProps>((props, ref) => {
-    const rectShape = React.useMemo(() => props.shapeDOM, []);
+    const rectShape = React.useMemo(() => props.FigurDOM, []);
 
     return elementToJsx(rectShape, null, props.style, ref);
 });

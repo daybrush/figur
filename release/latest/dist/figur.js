@@ -1,15 +1,15 @@
 /*
 Copyright (c) Daybrush
-name: shape-svg
+name: figur
 license: MIT
 author: Daybrush
-repository: https://github.com/daybrush/shape-svg
-version: 0.3.4
+repository: https://github.com/daybrush/figur
+version: 0.0.2
 */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Shape = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Figur = factory());
 })(this, (function () { 'use strict';
 
     /******************************************************************************
@@ -50,7 +50,7 @@ version: 0.3.4
         return t;
     }
 
-    var CLASS_NAME = "__shape-svg";
+    var CLASS_NAME = "__figur";
 
     /*
     Copyright (c) 2018 Daybrush
@@ -451,11 +451,27 @@ version: 0.3.4
             },
         };
         var children = [];
+        function innerHTML() {
+            return children.map(function (child) { return child.outerHTML; }).join("");
+        }
         return {
             tagName: tagName,
             attributes: attributes,
             children: children,
             className: "",
+            get innerHTML() {
+                return innerHTML();
+            },
+            get outerHTML() {
+                var html = innerHTML();
+                var length = attributes.length;
+                var attrTexts = [];
+                for (var i = 0; i < length; ++i) {
+                    var attr = attributes.item(i);
+                    attrTexts.push(" ".concat(attr.name, "=\"").concat(attr.value, "\""));
+                }
+                return "<".concat(tagName).concat(attrTexts.join(""), ">").concat(html, "</").concat(tagName, ">");
+            },
             appendChild: function (child) {
                 children.push(child);
             },
@@ -538,8 +554,11 @@ version: 0.3.4
                 "".concat(Math.max(left + width + right + strokeWidth, boxWidth), " ").concat(Math.max(top + height + bottom + strokeWidth, boxHeight)));
         }
     }
-    function getRect(shape) {
-        var _a = shape.left, left = _a === void 0 ? 0 : _a, _b = shape.top, top = _b === void 0 ? 0 : _b, _c = shape.side, side = _c === void 0 ? 3 : _c, _d = shape.rotate, rotate = _d === void 0 ? 0 : _d, _e = shape.innerRadius, innerRadius = _e === void 0 ? 100 : _e, _f = shape.height, height = _f === void 0 ? 0 : _f, _g = shape.split, split = _g === void 0 ? 1 : _g, _h = shape.width, width = _h === void 0 ? height ? 0 : 100 : _h, _j = shape.strokeLinejoin, strokeLinejoin = _j === void 0 ? "round" : _j, _k = shape.strokeWidth, strokeWidth = _k === void 0 ? 0 : _k;
+    /**
+     * Returns point, width, and height for figur information.
+     */
+    function getRect(figur) {
+        var _a = figur.left, left = _a === void 0 ? 0 : _a, _b = figur.top, top = _b === void 0 ? 0 : _b, _c = figur.side, side = _c === void 0 ? 3 : _c, _d = figur.rotate, rotate = _d === void 0 ? 0 : _d, _e = figur.innerRadius, innerRadius = _e === void 0 ? 100 : _e, _f = figur.height, height = _f === void 0 ? 0 : _f, _g = figur.split, split = _g === void 0 ? 1 : _g, _h = figur.width, width = _h === void 0 ? height ? 0 : 100 : _h, _j = figur.strokeLinejoin, strokeLinejoin = _j === void 0 ? "round" : _j, _k = figur.strokeWidth, strokeWidth = _k === void 0 ? 0 : _k;
         var xPoints = [];
         var yPoints = [];
         var sideCos = Math.cos(Math.PI / side);
@@ -598,8 +617,11 @@ version: 0.3.4
             return "".concat(i === 0 ? "M" : "L", " ").concat(point.join(" "));
         }).join(" ") + " Z";
     }
-    function be(path, shape, container) {
-        var _a = shape.left, left = _a === void 0 ? 0 : _a, _b = shape.top, top = _b === void 0 ? 0 : _b, _c = shape.right, right = _c === void 0 ? 0 : _c, _d = shape.bottom, bottom = _d === void 0 ? 0 : _d, side = shape.side, split = shape.split, rotate = shape.rotate, innerRadius = shape.innerRadius, height = shape.height, width = shape.width, _e = shape.fill, fill = _e === void 0 ? "transparent" : _e, _f = shape.strokeLinejoin, strokeLinejoin = _f === void 0 ? "round" : _f, _g = shape.strokeWidth, strokeWidth = _g === void 0 ? 0 : _g, _h = shape.css, css = _h === void 0 ? false : _h, className = shape.className, attributes = __rest(shape, ["left", "top", "right", "bottom", "side", "split", "rotate", "innerRadius", "height", "width", "fill", "strokeLinejoin", "strokeWidth", "css", "className"]);
+    /**
+     * Transform the shape of a polygon type.
+     */
+    function be(path, figur, container) {
+        var _a = figur.left, left = _a === void 0 ? 0 : _a, _b = figur.top, top = _b === void 0 ? 0 : _b, _c = figur.right, right = _c === void 0 ? 0 : _c, _d = figur.bottom, bottom = _d === void 0 ? 0 : _d, side = figur.side, split = figur.split, rotate = figur.rotate, innerRadius = figur.innerRadius, height = figur.height, width = figur.width, _e = figur.fill, fill = _e === void 0 ? "transparent" : _e, _f = figur.strokeLinejoin, strokeLinejoin = _f === void 0 ? "round" : _f, _g = figur.strokeWidth, strokeWidth = _g === void 0 ? 0 : _g, _h = figur.css, css = _h === void 0 ? false : _h, className = figur.className, attributes = __rest(figur, ["left", "top", "right", "bottom", "side", "split", "rotate", "innerRadius", "height", "width", "fill", "strokeLinejoin", "strokeWidth", "css", "className"]);
         var _j = getRect({
             left: left,
             top: top,
@@ -626,20 +648,32 @@ version: 0.3.4
         css ? setStyles(path, { d: "path('".concat(d, "')") }) : setAttributes(path, { d: d });
         setAttributes(path, __assign({ fill: fill, "stroke-linejoin": strokeLinejoin, "stroke-width": "".concat(strokeWidth) }, attributes));
     }
-    function star(shape, container) {
-        var _a = shape.side, side = _a === void 0 ? 3 : _a, _b = shape.innerRadius, innerRadius = _b === void 0 ? 60 * Math.cos(Math.PI / side) : _b;
+    /**
+     * Create a star-shaped svg element.
+     * If the container exists, it is inserted into the container.
+     */
+    function star(figur, container) {
+        var _a = figur.side, side = _a === void 0 ? 3 : _a, _b = figur.innerRadius, innerRadius = _b === void 0 ? 60 * Math.cos(Math.PI / side) : _b;
         return poly(__assign(__assign({}, arguments[0]), { innerRadius: innerRadius }), container);
     }
-    function poly(shape, container) {
+    /**
+     * Create a polygon-shaped svg element.
+     * If the container exists, it is inserted into the container.
+     */
+    function poly(figur, container) {
         if (container === void 0) { container = makeSVGDOM(); }
         var path = makeDOM("path");
-        be(path, shape, container);
+        be(path, figur, container);
         container.appendChild(path);
         return container;
     }
-    function oval(shape, container) {
+    /**
+     * Create a oval-shaped svg element.
+     * If the container exists, it is inserted into the container.
+     */
+    function oval(figur, container) {
         if (container === void 0) { container = makeSVGDOM(); }
-        var _a = shape.left, left = _a === void 0 ? 0 : _a, _b = shape.top, top = _b === void 0 ? 0 : _b, _c = shape.right, right = _c === void 0 ? 0 : _c, _d = shape.bottom, bottom = _d === void 0 ? 0 : _d, _e = shape.fill, fill = _e === void 0 ? "transparent" : _e, _f = shape.strokeLinejoin, strokeLinejoin = _f === void 0 ? "round" : _f, _g = shape.strokeWidth, strokeWidth = _g === void 0 ? 0 : _g, className = shape.className, _h = shape.r, r = _h === void 0 ? 0 : _h, _j = shape.rx, rx = _j === void 0 ? r : _j, _k = shape.ry, ry = _k === void 0 ? r : _k, _l = shape.width, width = _l === void 0 ? rx * 2 : _l, _m = shape.height, height = _m === void 0 ? ry * 2 : _m, origin = shape.origin, attributes = __rest(shape, ["left", "top", "right", "bottom", "fill", "strokeLinejoin", "strokeWidth", "className", "r", "rx", "ry", "width", "height", "origin"]);
+        var _a = figur.left, left = _a === void 0 ? 0 : _a, _b = figur.top, top = _b === void 0 ? 0 : _b, _c = figur.right, right = _c === void 0 ? 0 : _c, _d = figur.bottom, bottom = _d === void 0 ? 0 : _d, _e = figur.fill, fill = _e === void 0 ? "transparent" : _e, _f = figur.strokeLinejoin, strokeLinejoin = _f === void 0 ? "round" : _f, _g = figur.strokeWidth, strokeWidth = _g === void 0 ? 0 : _g, className = figur.className, _h = figur.r, r = _h === void 0 ? 0 : _h, _j = figur.rx, rx = _j === void 0 ? r : _j, _k = figur.ry, ry = _k === void 0 ? r : _k, _l = figur.width, width = _l === void 0 ? rx * 2 : _l, _m = figur.height, height = _m === void 0 ? ry * 2 : _m, origin = figur.origin, attributes = __rest(figur, ["left", "top", "right", "bottom", "fill", "strokeLinejoin", "strokeWidth", "className", "r", "rx", "ry", "width", "height", "origin"]);
         var ellipse = makeDOM("ellipse");
         var halfStroke = strokeWidth / 2;
         setViewBox(container, {
@@ -663,9 +697,13 @@ version: 0.3.4
         container.appendChild(ellipse);
         return container;
     }
-    function rect(shape, container) {
+    /**
+     * Create a rect-shaped svg element.
+     * If the container exists, it is inserted into the container.
+     */
+    function rect(figur, container) {
         if (container === void 0) { container = makeSVGDOM(); }
-        var _a = shape.left, left = _a === void 0 ? 0 : _a, _b = shape.top, top = _b === void 0 ? 0 : _b, _c = shape.right, right = _c === void 0 ? 0 : _c, _d = shape.bottom, bottom = _d === void 0 ? 0 : _d, _e = shape.round, round = _e === void 0 ? 0 : _e, width = shape.width, height = shape.height, _f = shape.fill, fill = _f === void 0 ? "transparent" : _f, _g = shape.strokeLinejoin, strokeLinejoin = _g === void 0 ? "round" : _g, _h = shape.strokeWidth, strokeWidth = _h === void 0 ? 0 : _h, _j = shape.css, css = _j === void 0 ? false : _j, className = shape.className, attributes = __rest(shape, ["left", "top", "right", "bottom", "round", "width", "height", "fill", "strokeLinejoin", "strokeWidth", "css", "className"]);
+        var _a = figur.left, left = _a === void 0 ? 0 : _a, _b = figur.top, top = _b === void 0 ? 0 : _b, _c = figur.right, right = _c === void 0 ? 0 : _c, _d = figur.bottom, bottom = _d === void 0 ? 0 : _d, _e = figur.round, round = _e === void 0 ? 0 : _e, width = figur.width, height = figur.height, _f = figur.fill, fill = _f === void 0 ? "transparent" : _f, _g = figur.strokeLinejoin, strokeLinejoin = _g === void 0 ? "round" : _g, _h = figur.strokeWidth, strokeWidth = _h === void 0 ? 0 : _h, _j = figur.css, css = _j === void 0 ? false : _j, className = figur.className, attributes = __rest(figur, ["left", "top", "right", "bottom", "round", "width", "height", "fill", "strokeLinejoin", "strokeWidth", "css", "className"]);
         var path = makeDOM("path");
         setViewBox(container, {
             left: left,
@@ -695,7 +733,7 @@ version: 0.3.4
         return container;
     }
 
-    var Shape = {
+    var Figur = {
         __proto__: null,
         getRect: getRect,
         getPath: getPath,
@@ -707,7 +745,7 @@ version: 0.3.4
         createVirtualDOM: createVirtualDOM
     };
 
-    return Shape;
+    return Figur;
 
 }));
-//# sourceMappingURL=shape.js.map
+//# sourceMappingURL=figur.js.map

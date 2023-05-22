@@ -4,9 +4,11 @@ name: shape-svg
 license: MIT
 author: Daybrush
 repository: https://github.com/daybrush/shape-svg
-version: 0.4.0
+version: 0.3.4
 */
-import { getKeys, splitText, camelize, addClass, hasClass, splitUnit } from '@daybrush/utils';
+'use strict';
+
+var utils = require('@daybrush/utils');
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -49,17 +51,17 @@ function __rest(s, e) {
 var CLASS_NAME = "__shape-svg";
 
 function splitStyle(str) {
-    var properties = splitText(str, ";");
+    var properties = utils.splitText(str, ";");
     var obj = {};
     var totalLength = properties.length;
     var length = totalLength;
     for (var i = 0; i < totalLength; ++i) {
-        var matches = splitText(properties[i], ":");
+        var matches = utils.splitText(properties[i], ":");
         if (matches.length < 2 || !matches[1]) {
             --length;
             continue;
         }
-        obj[camelize(matches[0].trim())] = matches[1].trim();
+        obj[utils.camelize(matches[0].trim())] = matches[1].trim();
     }
     return {
         styles: obj,
@@ -95,7 +97,7 @@ function createVirtualDOM(tagName) {
         set cssText(text) {
             var nextStyles = splitStyle(text).styles;
             styles = nextStyles;
-            keys = getKeys(styles);
+            keys = utils.getKeys(styles);
         },
     };
     var children = [];
@@ -136,7 +138,7 @@ function makeDOM(tag) {
 }
 function makeSVGDOM() {
     var el = makeDOM("svg");
-    addClass(el, CLASS_NAME);
+    utils.addClass(el, CLASS_NAME);
     return el;
 }
 function setAttributes(element, attributes) {
@@ -152,7 +154,7 @@ function setStyles(element, styles) {
     element.style.cssText += cssText.join("");
 }
 function getAbsoluteValue(value, pos, size) {
-    var info = splitUnit(value);
+    var info = utils.splitUnit(value);
     if (info.unit === "%") {
         return (pos + size * info.value / 100) + "px";
     }
@@ -175,9 +177,9 @@ function setOrigin(container, _a) {
 }
 function setViewBox(container, _a) {
     var width = _a.width, height = _a.height, left = _a.left, right = _a.right, bottom = _a.bottom, top = _a.top, strokeWidth = _a.strokeWidth, className = _a.className;
-    if (container && hasClass(container, CLASS_NAME)) {
+    if (container && utils.hasClass(container, CLASS_NAME)) {
         className && className.split(" ").forEach(function (name) {
-            addClass(container, name);
+            utils.addClass(container, name);
         });
         var _b = (container.getAttribute("viewBox") || "").split(" ")
             .map(function (pos) { return parseFloat(pos || "0"); }), _c = _b[2], boxWidth = _c === void 0 ? 0 : _c, _d = _b[3], boxHeight = _d === void 0 ? 0 : _d;
@@ -343,5 +345,12 @@ function rect(shape, container) {
     return container;
 }
 
-export { be, createVirtualDOM, getPath, getRect, oval, poly, rect, star };
-//# sourceMappingURL=shape-svg.esm.js.map
+exports.be = be;
+exports.createVirtualDOM = createVirtualDOM;
+exports.getPath = getPath;
+exports.getRect = getRect;
+exports.oval = oval;
+exports.poly = poly;
+exports.rect = rect;
+exports.star = star;
+//# sourceMappingURL=shape.cjs.js.map

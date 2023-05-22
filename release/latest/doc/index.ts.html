@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>index.ts - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/daybrush.css">
+    <link type="text/css" rel="stylesheet" href="styles/custom.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="description" content="index.ts - Documentation"/>
+
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h2 class="custom"><a href="https://github.com/daybrush/scenejs-render" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h2 class="custom"><a href="https://daybrush.com/scenejs/features.html" target="_blank" class="menu-item" id="features" >Features</a></h2><div class="search"><div class="input-area"><input type="text"/></div><button></button></div><ul class="global"><li file="global"  class="parent"><a href="global.html">Global</a><h4><a href="global.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typedef'><a href="global.html#RoundRectFigur">RoundRectFigur</a></li><li data-type='typedef'><a href="global.html#PolyFigur">PolyFigur</a></li><li data-type='typedef'><a href="global.html#OvalFigur">OvalFigur</a></li><li data-type='typedef'><a href="global.html#Figur">Figur</a></li></ul><h4><a href="global.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="global.html#star">star</a></li><li data-type='method'><a href="global.html#rect">rect</a></li><li data-type='method'><a href="global.html#poly">poly</a></li><li data-type='method'><a href="global.html#oval">oval</a></li><li data-type='method'><a href="global.html#getRect">getRect</a></li><li data-type='method'><a href="global.html#be">be</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">index.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { CLASS_NAME, STROKE_LINEJOIN } from "./consts";
+import { hasClass, addClass, splitUnit } from "@daybrush/utils";
+import { createVirtualDOM, FigurDOM } from "./VirtualDOM";
+
+/**
+ * @typedef
+ */
+export interface Figur {
+    left?: number;
+    top?: number;
+    right?: number;
+    bottom?: number;
+    width?: number;
+    height?: number;
+    fill?: string;
+    strokeLinejoin?: STROKE_LINEJOIN;
+    strokeWidth?: number;
+    className?: string;
+    origin?: string | number;
+    [key: string]: any;
+}
+
+export interface FigureInfo {
+    width: number;
+    height: number;
+    points: number[][];
+}
+/**
+ * @typedef
+ */
+export interface RoundRectFigur extends Figur {
+    round?: number;
+    css?: boolean;
+}
+
+/**
+ * @typedef
+ */
+export interface PolyFigur extends Figur {
+    side?: number;
+    split?: number;
+    css?: boolean;
+    innerRadius?: number;
+}
+
+/**
+ * @typedef
+ */
+export interface OvalFigur extends Figur {
+    r?: number;
+    rx?: number;
+    ry?: number;
+}
+
+function makeDOM(tag: string): FigurDOM {
+    if (typeof document === "undefined") {
+        return createVirtualDOM(tag);
+    } else {
+        return document.createElementNS("http://www.w3.org/2000/svg", tag);
+    }
+}
+
+function makeSVGDOM(): FigurDOM {
+    const el = makeDOM("svg");
+
+    addClass(el as Element, CLASS_NAME);
+
+    return el;
+}
+function setAttributes(element: FigurDOM, attributes: { [key: string]: any }) {
+    for (const name in attributes) {
+        element.setAttribute(name, attributes[name]);
+    }
+}
+function setStyles(element: FigurDOM, styles: { [key: string]: any }) {
+    const cssText = [];
+
+    for (const name in styles) {
+        cssText.push(`${name}:${styles[name]};`);
+    }
+    element.style.cssText += cssText.join("");
+}
+function getAbsoluteValue(value: string, pos: number, size: number) {
+    const info = splitUnit(value);
+
+    if (info.unit === "%") {
+        return (pos + size * info.value / 100) + "px";
+    } else if (info.unit === "px") {
+        return (pos + info.value) + "px";
+    } else {
+        return `calc(${pos}px + ${value})`;
+    }
+}
+function setOrigin(container: FigurDOM, {
+    width,
+    height,
+    left,
+    top,
+    origin,
+}: {
+    width: number,
+    height: number,
+    left: number,
+    top: number,
+    origin: string | number,
+}) {
+    if (!origin) {
+        return;
+    }
+    let [ox, oy = ox]: string[] = `${origin}`.split(" ");
+
+    ox = getAbsoluteValue(ox, left, width);
+    oy = getAbsoluteValue(oy, top, height);
+
+    container.style.cssText += `transform-origin: ${ox} ${oy};`;
+}
+
+function setViewBox(container: FigurDOM, {
+    width,
+    height,
+    left,
+    right,
+    bottom,
+    top,
+    strokeWidth,
+    className,
+}: {
+    width: number,
+    height: number,
+    left: number,
+    right: number,
+    bottom: number,
+    top: number,
+    strokeWidth: number,
+    className?: string,
+}) {
+    if (container &amp;&amp; hasClass(container as Element, CLASS_NAME)) {
+        className &amp;&amp; className.split(" ").forEach(name => {
+            addClass(container as Element, name);
+        });
+        const [, , boxWidth = 0, boxHeight = 0] = (container.getAttribute("viewBox") || "").split(" ")
+            .map(pos => parseFloat(pos || "0"));
+
+        container.setAttribute("viewBox", "0 0 " +
+            // tslint:disable-next-line:max-line-length
+            `${Math.max(left + width + right + strokeWidth, boxWidth)} ${Math.max(top + height + bottom + strokeWidth, boxHeight)}`);
+    }
+}
+
+/**
+ * Returns point, width, and height for figur information.
+ */
+export function getRect(figur: PolyFigur): FigureInfo {
+    const {
+        left = 0,
+        top = 0,
+        side = 3,
+        rotate = 0,
+        innerRadius = 100,
+        height = 0,
+        split = 1,
+        width = height ? 0 : 100,
+        strokeLinejoin = "round",
+        strokeWidth = 0,
+    } = figur;
+    let xPoints: number[] = [];
+    let yPoints: number[] = [];
+    const sideCos = Math.cos(Math.PI / side);
+    const startRad = Math.PI / 180 * rotate + Math.PI * ((side % 2 ? 0 : 1 / side) - 1 / 2);
+
+    for (let i = 0; i &lt; side; ++i) {
+        const rad = Math.PI * (1 / side * 2 * i) + startRad;
+        const cos = Math.cos(rad);
+        const sin = Math.sin(rad);
+
+        xPoints.push(cos);
+        yPoints.push(sin);
+        if (innerRadius !== 100) {
+            if (sideCos &lt;= innerRadius / 100) {
+                continue;
+            } else {
+                xPoints.push(innerRadius / 100 * Math.cos(rad + Math.PI / side));
+                yPoints.push(innerRadius / 100 * Math.sin(rad + Math.PI / side));
+            }
+        }
+    }
+    const minX = Math.min(...xPoints);
+    const minY = Math.min(...yPoints);
+    const maxX = Math.max(...xPoints);
+    const maxY = Math.max(...yPoints);
+    const isWidth = !!width;
+    const scale = isWidth ? width / (maxX - minX) : height / (maxY - minY);
+    const isOuter = strokeLinejoin === "miter" || strokeLinejoin === "arcs" || strokeLinejoin === "miter-clip";
+
+    const sideSin = Math.sin(Math.PI / side);
+    const innerCos = Math.min(sideCos, innerRadius / 100);
+    const innerScale = scale * innerCos;
+    const diagonal = strokeWidth / 2 / (sideCos === innerCos ? 1 : Math.sin(Math.atan(sideSin / (sideCos - innerCos))));
+    const outerScale = isOuter ? (innerScale + diagonal) / innerScale : 1;
+    const pos = isOuter ? 0 : strokeWidth / 2;
+
+    xPoints = xPoints.map(xp => (xp - minX * outerScale) * scale + pos);
+    yPoints = yPoints.map(yp => (yp - minY * outerScale) * scale + pos);
+
+    const pathWidth = (maxX - minX) * outerScale * scale + pos * 2;
+    const pathHeight = (maxY - minY) * outerScale * scale + pos * 2;
+    const length = xPoints.length;
+    const points = [];
+
+    points.push([left + xPoints[0], top + yPoints[0]]);
+    for (let i = 1; i &lt;= length; ++i) {
+        const x1 = xPoints[i - 1];
+        const y1 = yPoints[i - 1];
+        const x2 = xPoints[i === length ? 0 : i];
+        const y2 = yPoints[i === length ? 0 : i];
+
+        for (let j = 1; j &lt;= split; ++j) {
+            const x = (x1 * (split - j) + x2 * j) / split;
+            const y = (y1 * (split - j) + y2 * j) / split;
+
+            points.push([left + x, top + y]);
+        }
+    }
+
+    return { points, width: pathWidth, height: pathHeight };
+}
+
+export function getPath(points: number[][]) {
+    return points.map((point, i) => {
+        return `${i === 0 ? "M" : "L"} ${point.join(" ")}`;
+    }).join(" ") + " Z";
+}
+
+/**
+ * Transform the shape of a polygon type.
+ */
+export function be(path: SVGPathElement, figur: PolyFigur, container?: FigurDOM) {
+    const {
+        left = 0,
+        top = 0,
+        right = 0,
+        bottom = 0,
+        side,
+        split,
+        rotate,
+        innerRadius,
+        height,
+        width,
+        fill = "transparent",
+        strokeLinejoin = "round",
+        strokeWidth = 0,
+        css = false,
+        className,
+        ...attributes
+    } = figur
+    const {
+        points,
+        width: pathWidth,
+        height: pathHeight
+    } = getRect({
+        left, top, split, side, rotate, width,
+        height, innerRadius, strokeLinejoin, strokeWidth,
+    });
+
+    setViewBox(container, {
+        left,
+        top,
+        bottom,
+        right,
+        className,
+        strokeWidth: 0,
+        width: pathWidth,
+        height: pathHeight,
+    });
+    const d = getPath(points);
+
+    css ? setStyles(path, { d: `path('${d}')` }) : setAttributes(path, { d });
+
+    setAttributes(path, {
+        fill,
+        "stroke-linejoin": strokeLinejoin,
+        "stroke-width": `${strokeWidth}`,
+        ...attributes,
+    });
+}
+
+/**
+ * Create a star-shaped svg element.
+ * If the container exists, it is inserted into the container.
+ */
+export function star(figur: PolyFigur, container?: FigurDOM) {
+    const {
+        side = 3,
+        innerRadius = 60 * Math.cos(Math.PI / side),
+    } = figur;
+    return poly({ ...arguments[0], innerRadius }, container);
+}
+
+/**
+ * Create a polygon-shaped svg element.
+ * If the container exists, it is inserted into the container.
+ */
+export function poly(figur: PolyFigur, container: FigurDOM = makeSVGDOM()) {
+    const path: SVGPathElement = makeDOM("path") as SVGPathElement;
+
+    be(path, figur, container);
+    container.appendChild(path);
+
+    return container as SVGElement;
+}
+
+/**
+ * Create a oval-shaped svg element.
+ * If the container exists, it is inserted into the container.
+ */
+export function oval(figur: OvalFigur, container: FigurDOM = makeSVGDOM()) {
+    const {
+        left = 0,
+        top = 0,
+        right = 0,
+        bottom = 0,
+        fill = "transparent",
+        strokeLinejoin = "round",
+        strokeWidth = 0,
+        className,
+        r = 0,
+        rx = r,
+        ry = r,
+        width = rx * 2,
+        height = ry * 2,
+        origin,
+        ...attributes
+    } = figur;
+    const ellipse: SVGEllipseElement = makeDOM("ellipse") as SVGEllipseElement;
+    const halfStroke = strokeWidth / 2;
+
+    setViewBox(container, {
+        strokeWidth,
+        left,
+        top,
+        bottom,
+        right,
+        className,
+        width,
+        height,
+    });
+    setOrigin(ellipse, {
+        left: left + halfStroke,
+        top: top + halfStroke,
+        width,
+        height,
+        origin,
+    });
+
+    setAttributes(ellipse, {
+        fill,
+        "cx": left + halfStroke + width / 2,
+        "cy": top + halfStroke + height / 2,
+        "rx": width / 2,
+        "ry": height / 2,
+        "stroke-linejoin": strokeLinejoin,
+        "stroke-width": `${strokeWidth}`,
+        ...attributes,
+    });
+    container.appendChild(ellipse);
+
+    return container as SVGElement;
+}
+
+/**
+ * Create a rect-shaped svg element.
+ * If the container exists, it is inserted into the container.
+ */
+export function rect(
+    figur: RoundRectFigur,
+    container: FigurDOM = makeSVGDOM(),
+) {
+    const {
+        left = 0,
+        top = 0,
+        right = 0,
+        bottom = 0,
+        round = 0,
+        width,
+        height,
+        fill = "transparent",
+        strokeLinejoin = "round",
+        strokeWidth = 0,
+        css = false,
+        className,
+        ...attributes
+    } = figur;
+    const path: SVGPathElement = makeDOM("path") as SVGPathElement;
+    setViewBox(container, {
+        left,
+        top,
+        bottom,
+        right,
+        className,
+        width,
+        height,
+        strokeWidth,
+    });
+    setOrigin(path, {
+        left,
+        top,
+        width,
+        height,
+        origin,
+    });
+    const halfStroke = strokeWidth / 2;
+    const pathWidth = width - round * 2;
+    const pathHeight = height - round * 2;
+    // tslint:disable-next-line:max-line-length
+    const d = `M${left + round + halfStroke},${top + halfStroke} h${pathWidth} a${round},${round} 0 0 1 ${round},${round} v${pathHeight} a${round},${round} 0 0 1 -${round},${round} h-${pathWidth} a${round},${round} 0 0 1 -${round},-${round} v-${pathHeight} a${round},${round} 0 0 1 ${round},-${round} z`;
+
+    css ? setStyles(path, { d: `path('${d}')` }) : setAttributes(path, { d });
+
+    setAttributes(path, {
+        fill,
+        "stroke-linejoin": strokeLinejoin,
+        "stroke-width": `${strokeWidth}`,
+        ...attributes,
+    });
+    container.appendChild(path);
+
+    return container as SVGElement;
+}
+
+export * from "./VirtualDOM";
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+<style>
+
+
+nav li[file="index"]:after {
+    display: none;
+}
+nav li[file="index"] h4, nav li[file="index"] ul {
+    display: block;
+}
+</style>
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/daybrush/jsdoc">JSDoc 0.4.4</a> on Mon May 22 2023 23:45:57 GMT+0900 (대한민국 표준시) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script src="scripts/utils.min.js"></script>
+<script src="scripts/search.js"></script>
+<script src="scripts/custom.js"></script>
+</body>
+</html>

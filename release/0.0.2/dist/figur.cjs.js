@@ -1,12 +1,14 @@
 /*
 Copyright (c) Daybrush
-name: shape-svg
+name: figur
 license: MIT
 author: Daybrush
-repository: https://github.com/daybrush/shape-svg
-version: 0.4.0
+repository: https://github.com/daybrush/figur
+version: 0.0.2
 */
-import { getKeys, splitText, camelize, addClass, hasClass, splitUnit } from '@daybrush/utils';
+'use strict';
+
+var utils = require('@daybrush/utils');
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -46,20 +48,20 @@ function __rest(s, e) {
     return t;
 }
 
-var CLASS_NAME = "__shape-svg";
+var CLASS_NAME = "__figur";
 
 function splitStyle(str) {
-    var properties = splitText(str, ";");
+    var properties = utils.splitText(str, ";");
     var obj = {};
     var totalLength = properties.length;
     var length = totalLength;
     for (var i = 0; i < totalLength; ++i) {
-        var matches = splitText(properties[i], ":");
+        var matches = utils.splitText(properties[i], ":");
         if (matches.length < 2 || !matches[1]) {
             --length;
             continue;
         }
-        obj[camelize(matches[0].trim())] = matches[1].trim();
+        obj[utils.camelize(matches[0].trim())] = matches[1].trim();
     }
     return {
         styles: obj,
@@ -95,15 +97,31 @@ function createVirtualDOM(tagName) {
         set cssText(text) {
             var nextStyles = splitStyle(text).styles;
             styles = nextStyles;
-            keys = getKeys(styles);
+            keys = utils.getKeys(styles);
         },
     };
     var children = [];
+    function innerHTML() {
+        return children.map(function (child) { return child.outerHTML; }).join("");
+    }
     return {
         tagName: tagName,
         attributes: attributes,
         children: children,
         className: "",
+        get innerHTML() {
+            return innerHTML();
+        },
+        get outerHTML() {
+            var html = innerHTML();
+            var length = attributes.length;
+            var attrTexts = [];
+            for (var i = 0; i < length; ++i) {
+                var attr = attributes.item(i);
+                attrTexts.push(" ".concat(attr.name, "=\"").concat(attr.value, "\""));
+            }
+            return "<".concat(tagName).concat(attrTexts.join(""), ">").concat(html, "</").concat(tagName, ">");
+        },
         appendChild: function (child) {
             children.push(child);
         },
@@ -136,7 +154,7 @@ function makeDOM(tag) {
 }
 function makeSVGDOM() {
     var el = makeDOM("svg");
-    addClass(el, CLASS_NAME);
+    utils.addClass(el, CLASS_NAME);
     return el;
 }
 function setAttributes(element, attributes) {
@@ -152,7 +170,7 @@ function setStyles(element, styles) {
     element.style.cssText += cssText.join("");
 }
 function getAbsoluteValue(value, pos, size) {
-    var info = splitUnit(value);
+    var info = utils.splitUnit(value);
     if (info.unit === "%") {
         return (pos + size * info.value / 100) + "px";
     }
@@ -175,9 +193,9 @@ function setOrigin(container, _a) {
 }
 function setViewBox(container, _a) {
     var width = _a.width, height = _a.height, left = _a.left, right = _a.right, bottom = _a.bottom, top = _a.top, strokeWidth = _a.strokeWidth, className = _a.className;
-    if (container && hasClass(container, CLASS_NAME)) {
+    if (container && utils.hasClass(container, CLASS_NAME)) {
         className && className.split(" ").forEach(function (name) {
-            addClass(container, name);
+            utils.addClass(container, name);
         });
         var _b = (container.getAttribute("viewBox") || "").split(" ")
             .map(function (pos) { return parseFloat(pos || "0"); }), _c = _b[2], boxWidth = _c === void 0 ? 0 : _c, _d = _b[3], boxHeight = _d === void 0 ? 0 : _d;
@@ -186,8 +204,11 @@ function setViewBox(container, _a) {
             "".concat(Math.max(left + width + right + strokeWidth, boxWidth), " ").concat(Math.max(top + height + bottom + strokeWidth, boxHeight)));
     }
 }
-function getRect(shape) {
-    var _a = shape.left, left = _a === void 0 ? 0 : _a, _b = shape.top, top = _b === void 0 ? 0 : _b, _c = shape.side, side = _c === void 0 ? 3 : _c, _d = shape.rotate, rotate = _d === void 0 ? 0 : _d, _e = shape.innerRadius, innerRadius = _e === void 0 ? 100 : _e, _f = shape.height, height = _f === void 0 ? 0 : _f, _g = shape.split, split = _g === void 0 ? 1 : _g, _h = shape.width, width = _h === void 0 ? height ? 0 : 100 : _h, _j = shape.strokeLinejoin, strokeLinejoin = _j === void 0 ? "round" : _j, _k = shape.strokeWidth, strokeWidth = _k === void 0 ? 0 : _k;
+/**
+ * Returns point, width, and height for figur information.
+ */
+function getRect(figur) {
+    var _a = figur.left, left = _a === void 0 ? 0 : _a, _b = figur.top, top = _b === void 0 ? 0 : _b, _c = figur.side, side = _c === void 0 ? 3 : _c, _d = figur.rotate, rotate = _d === void 0 ? 0 : _d, _e = figur.innerRadius, innerRadius = _e === void 0 ? 100 : _e, _f = figur.height, height = _f === void 0 ? 0 : _f, _g = figur.split, split = _g === void 0 ? 1 : _g, _h = figur.width, width = _h === void 0 ? height ? 0 : 100 : _h, _j = figur.strokeLinejoin, strokeLinejoin = _j === void 0 ? "round" : _j, _k = figur.strokeWidth, strokeWidth = _k === void 0 ? 0 : _k;
     var xPoints = [];
     var yPoints = [];
     var sideCos = Math.cos(Math.PI / side);
@@ -246,8 +267,11 @@ function getPath(points) {
         return "".concat(i === 0 ? "M" : "L", " ").concat(point.join(" "));
     }).join(" ") + " Z";
 }
-function be(path, shape, container) {
-    var _a = shape.left, left = _a === void 0 ? 0 : _a, _b = shape.top, top = _b === void 0 ? 0 : _b, _c = shape.right, right = _c === void 0 ? 0 : _c, _d = shape.bottom, bottom = _d === void 0 ? 0 : _d, side = shape.side, split = shape.split, rotate = shape.rotate, innerRadius = shape.innerRadius, height = shape.height, width = shape.width, _e = shape.fill, fill = _e === void 0 ? "transparent" : _e, _f = shape.strokeLinejoin, strokeLinejoin = _f === void 0 ? "round" : _f, _g = shape.strokeWidth, strokeWidth = _g === void 0 ? 0 : _g, _h = shape.css, css = _h === void 0 ? false : _h, className = shape.className, attributes = __rest(shape, ["left", "top", "right", "bottom", "side", "split", "rotate", "innerRadius", "height", "width", "fill", "strokeLinejoin", "strokeWidth", "css", "className"]);
+/**
+ * Transform the shape of a polygon type.
+ */
+function be(path, figur, container) {
+    var _a = figur.left, left = _a === void 0 ? 0 : _a, _b = figur.top, top = _b === void 0 ? 0 : _b, _c = figur.right, right = _c === void 0 ? 0 : _c, _d = figur.bottom, bottom = _d === void 0 ? 0 : _d, side = figur.side, split = figur.split, rotate = figur.rotate, innerRadius = figur.innerRadius, height = figur.height, width = figur.width, _e = figur.fill, fill = _e === void 0 ? "transparent" : _e, _f = figur.strokeLinejoin, strokeLinejoin = _f === void 0 ? "round" : _f, _g = figur.strokeWidth, strokeWidth = _g === void 0 ? 0 : _g, _h = figur.css, css = _h === void 0 ? false : _h, className = figur.className, attributes = __rest(figur, ["left", "top", "right", "bottom", "side", "split", "rotate", "innerRadius", "height", "width", "fill", "strokeLinejoin", "strokeWidth", "css", "className"]);
     var _j = getRect({
         left: left,
         top: top,
@@ -274,20 +298,32 @@ function be(path, shape, container) {
     css ? setStyles(path, { d: "path('".concat(d, "')") }) : setAttributes(path, { d: d });
     setAttributes(path, __assign({ fill: fill, "stroke-linejoin": strokeLinejoin, "stroke-width": "".concat(strokeWidth) }, attributes));
 }
-function star(shape, container) {
-    var _a = shape.side, side = _a === void 0 ? 3 : _a, _b = shape.innerRadius, innerRadius = _b === void 0 ? 60 * Math.cos(Math.PI / side) : _b;
+/**
+ * Create a star-shaped svg element.
+ * If the container exists, it is inserted into the container.
+ */
+function star(figur, container) {
+    var _a = figur.side, side = _a === void 0 ? 3 : _a, _b = figur.innerRadius, innerRadius = _b === void 0 ? 60 * Math.cos(Math.PI / side) : _b;
     return poly(__assign(__assign({}, arguments[0]), { innerRadius: innerRadius }), container);
 }
-function poly(shape, container) {
+/**
+ * Create a polygon-shaped svg element.
+ * If the container exists, it is inserted into the container.
+ */
+function poly(figur, container) {
     if (container === void 0) { container = makeSVGDOM(); }
     var path = makeDOM("path");
-    be(path, shape, container);
+    be(path, figur, container);
     container.appendChild(path);
     return container;
 }
-function oval(shape, container) {
+/**
+ * Create a oval-shaped svg element.
+ * If the container exists, it is inserted into the container.
+ */
+function oval(figur, container) {
     if (container === void 0) { container = makeSVGDOM(); }
-    var _a = shape.left, left = _a === void 0 ? 0 : _a, _b = shape.top, top = _b === void 0 ? 0 : _b, _c = shape.right, right = _c === void 0 ? 0 : _c, _d = shape.bottom, bottom = _d === void 0 ? 0 : _d, _e = shape.fill, fill = _e === void 0 ? "transparent" : _e, _f = shape.strokeLinejoin, strokeLinejoin = _f === void 0 ? "round" : _f, _g = shape.strokeWidth, strokeWidth = _g === void 0 ? 0 : _g, className = shape.className, _h = shape.r, r = _h === void 0 ? 0 : _h, _j = shape.rx, rx = _j === void 0 ? r : _j, _k = shape.ry, ry = _k === void 0 ? r : _k, _l = shape.width, width = _l === void 0 ? rx * 2 : _l, _m = shape.height, height = _m === void 0 ? ry * 2 : _m, origin = shape.origin, attributes = __rest(shape, ["left", "top", "right", "bottom", "fill", "strokeLinejoin", "strokeWidth", "className", "r", "rx", "ry", "width", "height", "origin"]);
+    var _a = figur.left, left = _a === void 0 ? 0 : _a, _b = figur.top, top = _b === void 0 ? 0 : _b, _c = figur.right, right = _c === void 0 ? 0 : _c, _d = figur.bottom, bottom = _d === void 0 ? 0 : _d, _e = figur.fill, fill = _e === void 0 ? "transparent" : _e, _f = figur.strokeLinejoin, strokeLinejoin = _f === void 0 ? "round" : _f, _g = figur.strokeWidth, strokeWidth = _g === void 0 ? 0 : _g, className = figur.className, _h = figur.r, r = _h === void 0 ? 0 : _h, _j = figur.rx, rx = _j === void 0 ? r : _j, _k = figur.ry, ry = _k === void 0 ? r : _k, _l = figur.width, width = _l === void 0 ? rx * 2 : _l, _m = figur.height, height = _m === void 0 ? ry * 2 : _m, origin = figur.origin, attributes = __rest(figur, ["left", "top", "right", "bottom", "fill", "strokeLinejoin", "strokeWidth", "className", "r", "rx", "ry", "width", "height", "origin"]);
     var ellipse = makeDOM("ellipse");
     var halfStroke = strokeWidth / 2;
     setViewBox(container, {
@@ -311,9 +347,13 @@ function oval(shape, container) {
     container.appendChild(ellipse);
     return container;
 }
-function rect(shape, container) {
+/**
+ * Create a rect-shaped svg element.
+ * If the container exists, it is inserted into the container.
+ */
+function rect(figur, container) {
     if (container === void 0) { container = makeSVGDOM(); }
-    var _a = shape.left, left = _a === void 0 ? 0 : _a, _b = shape.top, top = _b === void 0 ? 0 : _b, _c = shape.right, right = _c === void 0 ? 0 : _c, _d = shape.bottom, bottom = _d === void 0 ? 0 : _d, _e = shape.round, round = _e === void 0 ? 0 : _e, width = shape.width, height = shape.height, _f = shape.fill, fill = _f === void 0 ? "transparent" : _f, _g = shape.strokeLinejoin, strokeLinejoin = _g === void 0 ? "round" : _g, _h = shape.strokeWidth, strokeWidth = _h === void 0 ? 0 : _h, _j = shape.css, css = _j === void 0 ? false : _j, className = shape.className, attributes = __rest(shape, ["left", "top", "right", "bottom", "round", "width", "height", "fill", "strokeLinejoin", "strokeWidth", "css", "className"]);
+    var _a = figur.left, left = _a === void 0 ? 0 : _a, _b = figur.top, top = _b === void 0 ? 0 : _b, _c = figur.right, right = _c === void 0 ? 0 : _c, _d = figur.bottom, bottom = _d === void 0 ? 0 : _d, _e = figur.round, round = _e === void 0 ? 0 : _e, width = figur.width, height = figur.height, _f = figur.fill, fill = _f === void 0 ? "transparent" : _f, _g = figur.strokeLinejoin, strokeLinejoin = _g === void 0 ? "round" : _g, _h = figur.strokeWidth, strokeWidth = _h === void 0 ? 0 : _h, _j = figur.css, css = _j === void 0 ? false : _j, className = figur.className, attributes = __rest(figur, ["left", "top", "right", "bottom", "round", "width", "height", "fill", "strokeLinejoin", "strokeWidth", "css", "className"]);
     var path = makeDOM("path");
     setViewBox(container, {
         left: left,
@@ -343,5 +383,12 @@ function rect(shape, container) {
     return container;
 }
 
-export { be, createVirtualDOM, getPath, getRect, oval, poly, rect, star };
-//# sourceMappingURL=shape-svg.esm.js.map
+exports.be = be;
+exports.createVirtualDOM = createVirtualDOM;
+exports.getPath = getPath;
+exports.getRect = getRect;
+exports.oval = oval;
+exports.poly = poly;
+exports.rect = rect;
+exports.star = star;
+//# sourceMappingURL=figur.cjs.js.map

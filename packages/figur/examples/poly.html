@@ -1,4 +1,4 @@
-<script src="../dist/shape.min.js"></script>
+<script src="../dist/figur.min.js"></script>
 <style>
 body {
   padding: 10px;
@@ -23,10 +23,10 @@ body {
 <div id="poly"></div>
 
 <script>
-  const poly1 = Shape.poly({strokeWidth: 10, stroke: "#F55", width: 100});
-  const poly2 = Shape.poly({strokeWidth: 10, stroke: "#5e5", width: 100, side: 4});
-  const poly3 = Shape.poly({strokeWidth: 10, stroke: "#55e", width: 100, side: 5});
-  const poly4 = Shape.star({strokeWidth: 10, stroke: "#5ee", width: 100, innerRadius: 40, side: 5});
+  const poly1 = Figur.poly({strokeWidth: 10, stroke: "#F55", width: 100});
+  const poly2 = Figur.poly({strokeWidth: 10, stroke: "#5e5", width: 100, side: 4});
+  const poly3 = Figur.poly({strokeWidth: 10, stroke: "#55e", width: 100, side: 5});
+  const poly4 = Figur.star({strokeWidth: 10, stroke: "#5ee", width: 100, innerRadius: 40, side: 5});
 
   poly.appendChild(poly1);
   poly.appendChild(poly2);

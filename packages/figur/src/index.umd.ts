@@ -1,3 +1,3 @@
-import * as Shape from "./index";
+import * as Figur from "./index";
 
-export default Shape;
+export default Figur;

@@ -19,13 +19,13 @@ module.exports = builder([
         external,
     },
     {
-        name: "Shape",
+        name: "Figur",
         input: "src/index.umd.ts",
         output: "./dist/figur.js",
         resolve: true,
     },
     {
-        name: "Shape",
+        name: "Figur",
         input: "src/index.umd.ts",
         output: "./dist/figur.min.js",
         resolve: true,

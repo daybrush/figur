@@ -22,7 +22,7 @@ const uglifyCode = uglify({
       var type = comment.type;
       if (type === "comment2") {
         // multiline comment
-        return /name:\sshape-svg/.test(text);
+        return /name:\sfigur/.test(text);
       }
     },
   },

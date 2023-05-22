@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { be } from 'shape-svg';
+import { be } from 'figur';
 import './App.css';
-import { Poly, Star } from './react-shape-svg/Shape';
+import { Poly, Star } from './react-figur/Shape';
 
 function App() {
   var colors = ["#f55", "#277EC9", "#80449D", "#D6631C", "#B8EDA0", "#B7EFF1", "#333"];

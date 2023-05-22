@@ -2,7 +2,7 @@
 
 import { camelize } from "@daybrush/utils";
 import * as React from "react";
-import { oval, OvalShape, poly, PolyShape, rect, RoundRectShape, ShapeDOM, star } from "shape-svg";
+import { oval, OvalShape, poly, PolyShape, rect, RoundRectShape, ShapeDOM, star } from "figur";
 
 function elementToJsx(
     element: ShapeDOM,

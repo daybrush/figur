@@ -6,15 +6,15 @@ const defaultOptions = {
 
 module.exports = builder([{
     ...defaultOptions,
-    input: "src/react-shape-svg/index.tsx",
-    output: "./dist/shape-svg.esm.js",
+    input: "src/react-figur/index.tsx",
+    output: "./dist/figur.esm.js",
     format: "es",
     exports: "named",
 },
 {
     ...defaultOptions,
-    input: "src/react-shape-svg/index.tsx",
-    output: "./dist/shape-svg.cjs.js",
+    input: "src/react-figur/index.tsx",
+    output: "./dist/figur.cjs.js",
     format: "cjs",
     exports: "named",
 },

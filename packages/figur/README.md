@@ -1,4 +1,4 @@
-# shape-svg  [![npm version](https://badge.fury.io/js/shape.svg)](https://badge.fury.io/js/shape-svg)
+# figur  [![npm version](https://badge.fury.io/js/shape.svg)](https://badge.fury.io/js/figur)
 
 ![](./polygon.png)
 
@@ -7,12 +7,12 @@ Make CSS Polygon Shape
 * [Polygons & Stars Demo](https://codepen.io/daybrush/pen/ReYxLy)
 
 ```sh
-$ npm install shape-svg
+$ npm install figur
 ```
 
 ## Options
 ```ts
-import {poly, star} from "shape-svg";
+import {poly, star} from "figur";
 
 import { CLASS_NAME, STROKE_LINEJOIN } from "./consts";
 
@@ -57,11 +57,11 @@ export function rect(options: RoundRectShape, container?: SVGElement): SVGElemen
 
 ## How to Use
 ```html
-<script src="//daybrush.github.io/shape-svg/release/latest/dist/shape.js"></script>
-<script src="//daybrush.github.io/shape-svg/release/latest/dist/shape.min.js"></script>
+<script src="//daybrush.github.io/figur/release/latest/dist/shape.js"></script>
+<script src="//daybrush.github.io/figur/release/latest/dist/shape.min.js"></script>
 ```
 ```js
-import {poly, star, be} from "shape-svg";
+import {poly, star, be} from "figur";
 
 // 10 star
 // Shape.poly

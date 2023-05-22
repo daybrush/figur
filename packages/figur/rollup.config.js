@@ -6,14 +6,14 @@ const external = {
 module.exports = builder([
     {
         input: 'src/index.ts',
-        output: "./dist/shape-svg.esm.js",
+        output: "./dist/figur.esm.js",
         format: "es",
         exports: "named",
         external,
     },
     {
         input: 'src/index.ts',
-        output: "./dist/shape-svg.cjs.js",
+        output: "./dist/figur.cjs.js",
         format: "cjs",
         exports: "named",
         external,
@@ -21,13 +21,13 @@ module.exports = builder([
     {
         name: "Shape",
         input: "src/index.umd.ts",
-        output: "./dist/shape-svg.js",
+        output: "./dist/figur.js",
         resolve: true,
     },
     {
         name: "Shape",
         input: "src/index.umd.ts",
-        output: "./dist/shape-svg.min.js",
+        output: "./dist/figur.min.js",
         resolve: true,
         uglify: true,
         visualizer: {},

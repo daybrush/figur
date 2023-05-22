@@ -1,9 +1,9 @@
 {
-    "name": "react-shape-svg",
-    "version": "0.1.4",
+    "name": "react-figur",
+    "version": "0.1.0",
     "description": "Make svg polygon & star shape for React",
-    "main": "dist/shape-svg.cjs.js",
-    "module": "dist/shape-svg.esm.js",
+    "main": "dist/figur.cjs.js",
+    "module": "dist/figur.esm.js",
     "sideEffects": false,
     "types": "declaration/index.d.ts",
     "keywords": [
@@ -23,17 +23,17 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/daybrush/shape-svg"
+        "url": "https://github.com/daybrush/figur"
     },
     "author": "Daybrush",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/daybrush/shape-svg/issues"
+        "url": "https://github.com/daybrush/figur/issues"
     },
-    "homepage": "https://github.com/daybrush/shape-svg#readme",
+    "homepage": "https://github.com/daybrush/figur#readme",
     "dependencies": {
         "@daybrush/utils": "^1.10.2",
-        "shape-svg": "^0.4.0"
+        "figur": "^0.4.0"
     },
     "devDependencies": {
         "@daybrush/builder": "^0.2.0",

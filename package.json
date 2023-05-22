@@ -1,12 +1,12 @@
 {
-    "name": "shape-svg-root",
+    "name": "figur-root",
     "version": "0.0.0",
     "description": "Make svg polygon & star shape",
     "sideEffects": false,
     "private": true,
     "repository": {
         "type": "git",
-        "url": "https://github.com/daybrush/shape-svg.git"
+        "url": "https://github.com/daybrush/figur.git"
     },
     "keywords": [
         "shape",
@@ -21,17 +21,17 @@
     "author": "Daybrush",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/daybrush/shape-svg/issues"
+        "url": "https://github.com/daybrush/figur/issues"
     },
-    "homepage": "https://daybrush.com/shape-svg",
+    "homepage": "https://daybrush.com/figur",
     "scripts": {
         "packages:update": "lerna-helper version",
         "packages:build": "lerna run build",
         "packages:publish": "lerna-helper publish --commit 'chore: publish packages'",
-        "changelog": "lerna-helper changelog --type all --base shape-svg",
+        "changelog": "lerna-helper changelog --type all --base figur",
         "doc": "rm -rf ./doc && jsdoc -c jsdoc.json",
-        "deploy": "lerna-helper deploy --base shape-svg",
-        "release": "lerna-helper release --base shape-svg"
+        "deploy": "lerna-helper deploy --base figur",
+        "release": "lerna-helper release --base figur"
     },
     "devDependencies": {
         "@daybrush/jsdoc": "^0.4.4",

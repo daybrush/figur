@@ -1,9 +1,9 @@
 {
  "name": "svelte-figur",
- "version": "0.0.2",
+ "version": "0.0.3",
  "description": "Make svg polygon & star shape for React",
  "type": "module",
- "svelte": "dist/figur.test.js",
+ "svelte": "dist/index.js",
  "sideEffects": false,
  "types": "dist/index.d.ts",
  "keywords": [

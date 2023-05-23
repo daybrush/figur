@@ -1,6 +1,6 @@
 {
     "name": "react-figur",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Make svg polygon & star shape for React",
     "main": "dist/figur.cjs.js",
     "module": "dist/figur.esm.js",
@@ -33,7 +33,7 @@
     "homepage": "https://github.com/daybrush/figur#readme",
     "dependencies": {
         "@daybrush/utils": "^1.10.2",
-        "figur": "~0.0.2"
+        "figur": "~0.0.3"
     },
     "devDependencies": {
         "@daybrush/builder": "^0.2.0",

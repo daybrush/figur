@@ -1,6 +1,6 @@
 {
   "name": "figur",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Make svg polygon & star shape",
   "main": "dist/figur.cjs.js",
   "module": "dist/figur.esm.js",

@@ -97,11 +97,30 @@ export function createVirtualDOM(tagName: string): FigurDOM {
     function innerHTML() {
         return children.map(child => child.outerHTML).join("");
     }
+    function getAttribute(name: string) {
+        return attributeMap[name]?.value ?? null;
+    }
+    function setAttribute(name: string, value: string) {
+        if (!attributeMap[name]) {
+            const attr = {
+                name,
+                value,
+            };
+            attrs.push(attr);
+            attributeMap[name] = attr;
+        }
+        attributeMap[name].value = value;
+    }
     return {
         tagName,
         attributes,
         children,
-        className: "",
+        get className() {
+            return getAttribute("class") || "";
+        },
+        set className(nextClassName: string) {
+            setAttribute("class", nextClassName);
+        },
         get innerHTML() {
             return innerHTML();
         },
@@ -120,20 +139,8 @@ export function createVirtualDOM(tagName: string): FigurDOM {
         appendChild(child: FigurDOM) {
             children.push(child);
         },
-        getAttribute(name: string) {
-            return attributeMap[name]?.value ?? null;
-        },
-        setAttribute(name: string, value: string) {
-            if (!attributeMap[name]) {
-                const attr = {
-                    name,
-                    value,
-                };
-                attrs.push(attr);
-                attributeMap[name] = attr;
-            }
-            attributeMap[name].value = value;
-        },
+        getAttribute,
+        setAttribute,
         style,
     };
 }

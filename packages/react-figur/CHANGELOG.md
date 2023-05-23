@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.3](https://github.com/daybrush/figur/compare/react-figur@0.0.2...react-figur@0.0.3) (2023-05-23)
+
+
+### :mega: Other
+
+* publish packages ([81ebc3c](https://github.com/daybrush/figur/commit/81ebc3c3e01e85ff22fed0c5d0aaf2d1812df8f4))
+
+
+
 ## 0.0.2 (2023-05-22)
 
 
